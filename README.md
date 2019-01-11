@@ -1,4 +1,5 @@
 ### Projet en cours !!! work in progress !!!
+ATTENTION i'm not a developer but it works
 
 # zigbee-shepherd-api-rest
 
