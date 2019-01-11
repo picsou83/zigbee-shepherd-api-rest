@@ -23,8 +23,6 @@ npm install
 npm start  
 ```
 
-* Open up http://0.0.0.0:3000/api-docs with your browser
-
 * if you already have a database with zigbee-shepherd
 copy database in /data/
 change parameters in server.js it must be the same as the old configuration
@@ -51,6 +49,21 @@ var zserver = new ZShepherd('/dev/ttyACM0', {
 
 https://koenkk.github.io/zigbee2mqtt/getting_started/pairing_devices.html
 
+
+* Open up http://youripofservernodejs:3000/api-docs with your browser
+WARNING currently swagger-ui-express is not implemented
+
+* Use API directly with your browser http://youripofservernodejs:3000/
+
+Commande ON
+```
+http://192.168.1.56:3000/genOnOff?appareil=0x000d6ffffe7c311c&epid=1&commande=on
+```
+
+Commande OFF
+```
+http://192.168.1.56:3000/genOnOff?appareil=0x000d6ffffe7c311c&epid=1&commande=off
+```
 
 
 <br />
