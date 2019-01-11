@@ -1,6 +1,8 @@
+### Projet en cours !!! work in progress !!!
+
 # zigbee-shepherd-api-rest
 
-Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API. 
+Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API and swagger-ui-express  
 
 with CC2531 USB Dongle
 
@@ -18,8 +20,16 @@ npm start
 
 * Open up http://0.0.0.0:3000/api-docs with your browser
 
-### Projet en cours !!! work in progress !!!
 
+<br />
+
+## Overview  
+
+**zigbee-shepherd** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [cc-znp](https://github.com/zigbeer/cc-znp) to run the CC253X as a coordinator and to run zigbee-shepherd as the host.
+
+![ZigBee Network](https://raw.githubusercontent.com/zigbeer/documents/master/zigbee-shepherd/zigbee_net.png)
+
+<br />
 
 Pour case 'devChange' et case 'attReport', les rapports sont logger et envoyé au plugin jeedom
 
