@@ -54,8 +54,11 @@ The necessary equipment for the firmware and the device preparation process are 
 The devices connected to the Zigbee-network and inform the coordinator of their status and events (button presses, motion detection, temperature change). This information is reflected in console.log and export to jeedom plugin but it's possible to export object-states elsewhere.
 
 ## the reports are logger and sent to the jeedom plugin
-'devChange' et case 'attReport'
-example of Get request {"Type":"attReport","Typedev":"Router","ieeeAddr":"0xd0cf5efffeb423d2","nwkAddr":44829,"manufId":4476,"manufName":"IKEA of Sweden","powerSource":"Mains (single phase)","modelId":"TRADFRI bulb E27 W opal 1000lm","epId":1,"data":{"cid":"genOnOff","data":{"onOff":0}}}
+'devChange' and 'attReport' are sent to jeedom plugin
+example of Get request :
+```
+{"Type":"attReport","Typedev":"Router","ieeeAddr":"0xd0cf5efffeb423d2","nwkAddr":44829,"manufId":4476,"manufName":"IKEA of Sweden","powerSource":"Mains (single phase)","modelId":"TRADFRI bulb E27 W opal 1000lm","epId":1,"data":{"cid":"genOnOff","data":{"onOff":0}}}
+```
 
 it's possible to import this events elsewhere with nodejs or php ect ...
 
