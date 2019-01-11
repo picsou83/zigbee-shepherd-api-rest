@@ -1,5 +1,5 @@
 ### Projet en cours !!! work in progress !!!
-ATTENTION i'm not a developer but it works
+WARNING i'm not a developer but it works
 
 I only use get request to interact with zigbee shepherd
 
@@ -9,7 +9,7 @@ Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API
 
 with CC2531 USB Dongle
 
-ATTENTION currently swagger-ui-express is not implemented
+WARNING currently swagger-ui-express is not implemented
 
 ### To run the demo
 
@@ -24,6 +24,33 @@ npm start
 ```
 
 * Open up http://0.0.0.0:3000/api-docs with your browser
+
+* if you already have a database with zigbee-shepherd
+copy database in /data/
+change parameters in server.js it must be the same as the old configuration
+WARNING the key can change panid and lose all those objects
+
+```
+var zserver = new ZShepherd('/dev/ttyACM0', {
+	sp: {
+	     baudRate: 115200, 
+	     rtscts: true
+	    },
+	dbPath: (__dirname + '/data/database.db'),
+	net: {
+	        panId: 0x1111,
+	        channelList: [ 12 ],    // pick CH12 and CH14
+	        precfgkey: [ 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+	                     0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f ],
+	        precfgkeysEnable: true
+	     }
+});
+```
+
+* pairing device
+
+https://koenkk.github.io/zigbee2mqtt/getting_started/pairing_devices.html
+
 
 
 <br />
