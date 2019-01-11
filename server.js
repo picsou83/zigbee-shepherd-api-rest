@@ -69,52 +69,118 @@ zserver.on('error', function (err) {
 zserver.on('ind', function (msg) {
 	
 	        switch (msg.type) {
-				
-       
-            case 'devChange':
-				console.log(chalk.green('[ devChange ] ') + '' + msg.endpoints[0].device.ieeeAddr + ', ' + JSON.stringify(msg.data));				
-				var jeedomchange = JSON.stringify({Type: msg.type, ieeeAddr: msg.endpoints[0].device.ieeeAddr, epId: msg.endpoints[0].epId, data: msg.data,});
-				var buff = new Buffer(jeedomchange);  
-				var base64data = buff.toString('base64');
-//			console.log('"' + jeedomchangegenOnOff + '" converted to Base64 is "' + base64data + '"'); 
-				var urljeedomchange = 'http://192.168.1.54:8122/'+base64data;
-				request(urljeedomchange, function (error, response, body) {
-                if (error) { console.log("--- Error send request http devChange:", error); }
-              });
-            break;
-			
-			case 'devIncoming':
-				devIncomingInd(getDevInfo(msg.data, msg.endpoints));
-            break;
-
-			case 'devStatus':
-				devStatusInd(msg.endpoints[0].getIeeeAddr(), msg.data);
-            break;
-
-            case 'devInterview':
-				console.log(chalk.red('[ devInterview ] ') + JSON.stringify(msg.data) + ' interview!');
-            break;
-                
+     
             case 'attReport':
-            console.log(chalk.yellow('[ attReport ] ') + '' + msg.endpoints[0].device.ieeeAddr + ', ' + JSON.stringify(msg.data));
-            var jeedomattReport = JSON.stringify({Type: msg.type, ieeeAddr: msg.endpoints[0].device.ieeeAddr, epId: msg.endpoints[0].epId, data: msg.data,});
-            var buffnew = new Buffer(jeedomattReport);  
-            var base64datanew = buffnew.toString('base64');
-            var urljeedomattReport = 'http://192.168.1.54:8122/'+base64datanew;
-            request(urljeedomattReport, function (error, response, body) {
-                  if (error) { console.log("--- Error send request http attReport:", error); }
-              });    
-			break;    
-                             
-            case 'devLeaving':
-                leavingDevice(msg);
+            case 'devChange': {
+		console.log(chalk.green('[ Report & Change ] ') 
+			+ ' ' + msg.type 
+			+ ' ' + msg.endpoints[0].device.type 
+			+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
+			+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
+			+ ' manufId ' + msg.endpoints[0].device.manufId 
+			+ ' manufName ' + msg.endpoints[0].device.manufName 
+			+ ' powerSource ' + msg.endpoints[0].device.powerSource 
+			+ ' modelId ' + msg.endpoints[0].device.modelId 
+			+ ' data ' + JSON.stringify(msg.data));	
+
+		var jeedomchange = JSON.stringify({
+			Type: msg.type,
+			Typedev: msg.endpoints[0].device.type,
+			ieeeAddr: msg.endpoints[0].device.ieeeAddr,
+			nwkAddr: msg.endpoints[0].device.nwkAddr,
+			manufId: msg.endpoints[0].device.manufId,
+			manufName: msg.endpoints[0].device.manufName,
+			powerSource: msg.endpoints[0].device.powerSource,
+			modelId: msg.endpoints[0].device.modelId,
+			epId: msg.endpoints[0].epId,
+			data: msg.data,
+			});
+									
+		var buff = new Buffer(jeedomchange);  
+		var base64data = buff.toString('base64');
+//		console.log('"' + jeedomchangegenOnOff + '" converted to Base64 is "' + base64data + '"'); 
+		var urljeedomchange = 'http://192.168.1.54:8122/'+base64data;
+		request(urljeedomchange, function (error, response, body) {
+                if (error) { console.log("--- Error send request http report & Change:", error); }
+              });
+		}
             break;
 
-            default:
-                console.log('Type de callback non definit! > ' + msg.type);
-            break;
+          
+            case 'cmdOn':
+            case 'cmdOff':
+            case 'cmdOffWithEffect':
+            case 'cmdStep':
+            case 'cmdStop':
+            case 'cmdStepColorTemp':
+            case 'cmdMoveWithOnOff':
+            case 'cmdMove':
+            case 'cmdMoveHue':
+            case 'cmdMoveToSaturation':
+            case 'cmdStopWithOnOff':
+            case 'cmdMoveToLevelWithOnOff':
+            case 'cmdToggle':
+            case 'cmdTradfriArrowSingle':
+            case 'cmdTradfriArrowHold':
+            case 'cmdTradfriArrowRelease':
+            case 'cmdStepWithOnOff': {
+			console.log(chalk.green('[ CMD ] ') 
+				+ ' ' + msg.type 
+				+ ' ' + msg.endpoints[0].device.type 
+				+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
+				+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
+				+ ' manufName ' + msg.endpoints[0].device.manufName 
+				+ ' manufId ' + msg.endpoints[0].device.manufId 
+				+ ' powerSource ' + msg.endpoints[0].device.powerSource 
+				+ ' modelId ' + msg.endpoints[0].device.modelId 
+				+ ' clusterid ' + msg.data.cid);
+										
+			var jeedom = JSON.stringify({
+				Type: msg.type,
+				Typedev: msg.endpoints[0].device.type,
+				ieeeAddr: msg.endpoints[0].device.ieeeAddr,
+				nwkAddr: msg.endpoints[0].device.nwkAddr,
+				manufId: msg.endpoints[0].device.manufId,
+				manufName: msg.endpoints[0].device.manufName,
+				powerSource: msg.endpoints[0].device.powerSource,
+				modelId: msg.endpoints[0].device.modelId,
+				epId: msg.endpoints[0].epId,
+				data: msg.data,
+				clusterid: msg.data.cid,
+			});
+												
+			var buff = new Buffer(jeedom);  
+			var base64 = buff.toString('base64');
+			var urljeedom = 'http://192.168.1.54:8122/'+base64;
+			request(urljeedom, function (error, response, body) {
+                if (error) { console.log("--- Error send request http CMD:", error); }
+              });
+            }
+	break;
+			
+			
+	case 'devIncoming':
+	devIncomingInd(getDevInfo(msg.data, msg.endpoints));
+        break;
+
+	case 'devStatus':
+	devStatusInd(msg.endpoints[0].getIeeeAddr(), msg.data);
+        break;
+
+        case 'devInterview':
+	console.log(chalk.red('[ devInterview ] ') + JSON.stringify(msg.data) + ' interview!');
+        break;
+                
+        case 'devLeaving':
+        leavingDevice(msg);
+        break;
+               
+        default:
+        console.log('Type de callback non definit! > ' + msg.type);
+        break;
         }
-    });
+});
+
 
 
 /**********************************/
