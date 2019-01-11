@@ -6,6 +6,8 @@ Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API
 
 with CC2531 USB Dongle
 
+ATTENTION currently swagger-ui-express is not implemented
+
 ### To run the demo
 
 * Install
