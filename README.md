@@ -15,12 +15,13 @@ WARNING currently swagger-ui-express is not implemented
 
 * Install
 ```  
+git clone https://github.com/picsou83/zigbee-shepherd-api-rest.git
 npm install  
 ```
 
 * Run the WebApp
 ```
-npm start  
+node server.js 
 ```
 
 * if you already have a database with zigbee-shepherd
@@ -49,10 +50,13 @@ var zserver = new ZShepherd('/dev/ttyACM0', {
 
 https://koenkk.github.io/zigbee2mqtt/getting_started/pairing_devices.html
 
+use configuration to bind end report device (use zigbee-shepherd-converters)
+
+http://192.168.1.56:3000/configuration?appareil=0x000d6ffffe7cc1e8
 
 * Open up http://youripofservernodejs:3000/api-docs with your browser
 
-WARNING currently swagger-ui-express is not implemented
+use swagger
 
 * Use API directly with your browser http://youripofservernodejs:3000/
 
