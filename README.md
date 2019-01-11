@@ -1,6 +1,8 @@
 ### Projet en cours !!! work in progress !!!
 ATTENTION i'm not a developer but it works
 
+I only use get request to interact with zigbee shepherd
+
 # zigbee-shepherd-api-rest
 
 Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API and swagger-ui-express  
