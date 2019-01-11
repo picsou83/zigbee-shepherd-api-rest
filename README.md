@@ -23,13 +23,31 @@ npm start
 
 <br />
 
-## Overview  
+## Additional info
 
-**zigbee-shepherd** is an open source ZigBee gateway solution with node.js. It uses TI's [CC253X](http://www.ti.com/lsds/ti/wireless_connectivity/zigbee/overview.page) wireless SoC as a [zigbee network processor (ZNP)](http://www.ti.com/lit/an/swra444/swra444.pdf), and takes the ZNP approach with [cc-znp](https://github.com/zigbeer/cc-znp) to run the CC253X as a coordinator and to run zigbee-shepherd as the host.
+There is a [friendly project](https://github.com/koenkk/zigbee2mqtt) with similar functionality on the same technologies, where you can work with the same devices using the MQTT protocol.
 
-![ZigBee Network](https://raw.githubusercontent.com/zigbeer/documents/master/zigbee-shepherd/zigbee_net.png)
+There are knowledge bases that can be useful for working with Zigbee-devices and equipment:
+* in English https://github.com/koenkk/zigbee2mqtt/wiki
+* in Russian https://github.com/kirovilya/ioBroker.zigbee/wiki
 
-<br />
+## Zigbee adapter for Xiaomi (and other) devices via cc2531/cc2530
+
+With the Zigbee-coordinator based on Texas Instruments SoC cc253x (and others), it creates its own zigbee-network, into which zigbee-devices are connected. By work directly with the coordinator, the driver allows you to manage devices without additional gateways / bridge from device manufacturers (Xiaomi / TRADFRI / Hue). About the device Zigbee-network can be read [here (in English)](https://github.com/Koenkk/zigbee2mqtt/wiki/ZigBee-network).
+
+## Hardware
+
+For work, you need one of the following devices, flashed with a special ZNP firmware: [cc2531, cc2530, cc2530 + RF](https://github.com/Koenkk/zigbee2mqtt/wiki/Supported-sniffer-devices#zigbee-coordinator)
+
+<span><img src="https://ae01.alicdn.com/kf/HTB1Httue3vD8KJjSsplq6yIEFXaJ/Wireless-Zigbee-CC2531-Sniffer-Bare-Board-Packet-Protocol-Analyzer-Module-USB-Interface-Dongle-Capture-Packet.jpg_640x640.jpg" width="100"></span>
+<span><img src="http://img.dxcdn.com/productimages/sku_429478_2.jpg" width="100"></span>
+<span><img src="http://img.dxcdn.com/productimages/sku_429601_2.jpg" width="100"></span>
+<span><img src="https://ae01.alicdn.com/kf/HTB1zAA5QVXXXXahapXXq6xXFXXXu/RF-TO-USB-CC2530-CC2591-RF-switch-USB-transparent-serial-data-transmission-equipment.jpg_640x640.jpg" width="100"></span>
+
+The necessary equipment for the firmware and the device preparation process are described [here (in English)](https://github.com/Koenkk/zigbee2mqtt/wiki/Getting-started) or [here (in Russian)](https://github.com/kirovilya/ioBroker.zigbee/wiki/%D0%9F%D1%80%D0%BE%D1%88%D0%B8%D0%B2%D0%BA%D0%B0)
+
+The devices connected to the Zigbee-network and inform the coordinator of their status and events (button presses, motion detection, temperature change). This information is reflected in console.log and export to jeedom plugin but it's possible to export object-states elsewhere.
+
 
 Pour case 'devChange' et case 'attReport', les rapports sont logger et envoyé au plugin jeedom
 
