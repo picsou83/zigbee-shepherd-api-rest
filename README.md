@@ -1,10 +1,25 @@
-api rest for zigbee-shepherd
-An open source ZigBee gateway solution with node.js
+# zigbee-shepherd-api-rest
 
-Projet en cours !!! work in progress !!!
+Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API. 
 
-Pour installer :
-npm install
+with CC2531 USB Dongle
+
+### To run the demo
+
+* Install
+```  
+npm install  
+```
+
+* Run the WebApp
+```
+npm start  
+```
+
+* Open up http://0.0.0.0:3000/api-docs with your browser
+
+### Projet en cours !!! work in progress !!!
+
 
 Pour case 'devChange' et case 'attReport', les rapports sont logger et envoyé au plugin jeedom
 
