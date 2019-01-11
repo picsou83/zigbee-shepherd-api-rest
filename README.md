@@ -55,7 +55,9 @@ The devices connected to the Zigbee-network and inform the coordinator of their 
 
 ## the reports are logger and sent to the jeedom plugin
 'devChange' et case 'attReport'
-it's possible to import events elsewhere with 
+example of Get request {"Type":"attReport","Typedev":"Router","ieeeAddr":"0xd0cf5efffeb423d2","nwkAddr":44829,"manufId":4476,"manufName":"IKEA of Sweden","powerSource":"Mains (single phase)","modelId":"TRADFRI bulb E27 W opal 1000lm","epId":1,"data":{"cid":"genOnOff","data":{"onOff":0}}}
+
+it's possible to import this events elsewhere with nodejs or php ect ...
 
 ```  
   	let buff = new Buffer(data, 'base64');
