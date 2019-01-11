@@ -51,9 +51,11 @@ https://koenkk.github.io/zigbee2mqtt/getting_started/pairing_devices.html
 
 
 * Open up http://youripofservernodejs:3000/api-docs with your browser
+
 WARNING currently swagger-ui-express is not implemented
 
 * Use API directly with your browser http://youripofservernodejs:3000/
+
 
 Commande ON
 ```
