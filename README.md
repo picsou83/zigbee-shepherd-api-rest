@@ -50,10 +50,18 @@ The necessary equipment for the firmware and the device preparation process are 
 
 The devices connected to the Zigbee-network and inform the coordinator of their status and events (button presses, motion detection, temperature change). This information is reflected in console.log and export to jeedom plugin but it's possible to export object-states elsewhere.
 
+## the reports are logger and sent to the jeedom plugin
+'devChange' et case 'attReport'
+it's possible to import events elsewhere with 
 
-Pour case 'devChange' et case 'attReport', les rapports sont logger et envoyé au plugin jeedom
+```  
+  	let buff = new Buffer(data, 'base64');
+    let text = buff.toString('ascii');  
+  	let valeur = null;
+  	console.log('"' + data + '" converted from Base64 to ASCII is "' + text + '"');
+```
 
-Quelques exemples en attendant swagger :
+## Some examples while waiting swagger
 
 Lancer bind + report en utilisant zigbee-shepherd-converters:
 http://192.168.1.56:3000/configuration?appareil=0x000d6ffffe7cc1e8
