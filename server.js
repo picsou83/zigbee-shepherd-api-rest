@@ -26,8 +26,6 @@ var bodyParser = require('body-parser')
 rest.use(bodyParser.json());
 const deviceMapping = require('zigbee-shepherd-converters');
 //const zclId = require('zcl-id');
-const safeJsonStringify = require(__dirname + '/lib/json');
-const statesMapping = require(__dirname + '/lib/devstates');
 const SerialPort = require('serialport');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
