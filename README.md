@@ -1,15 +1,10 @@
-### Projet en cours !!! work in progress !!!
-WARNING i'm not a developer but it works
-
-I only use get request to interact with zigbee shepherd
+only use get request to interact with zigbee shepherd
 
 # zigbee-shepherd-api-rest
 
 Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API and swagger-ui-express  
 
 with CC2531 USB Dongle
-
-WARNING currently swagger-ui-express is not implemented
 
 ### To run the demo
 
