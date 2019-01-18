@@ -20,88 +20,93 @@ var zserver = new ZShepherd('/dev/ttyACM0', {
 var express = require('express');
 var rest = express();
 var request = require('request');
-const Queue = require('queue');
-var chalk = require('chalk');
 var bodyParser = require('body-parser')
 rest.use(bodyParser.json());
+
 const deviceMapping = require('zigbee-shepherd-converters');
-//const zclId = require('zcl-id');
+const zclId = require('zcl-id');
 const SerialPort = require('serialport');
+
+//swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-
 rest.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+//Vars
 const timeOut = 255; //Connection timeout is disabled if value is set to 255
 const listenPort = 3000;
-	    this.queue = new Queue();
-        this.queue.concurrency = 1;
-        this.queue.autostart = true;
 
-
-setLeaveMsg();
-
+/**
+* Setup command queue.
+* The command queue ensures that only 1 command is executed at a time.
+* When executing multiple commands at the same time, some commands may fail.
+*/
+const Queue = require('queue');
+this.queue = new Queue();
+this.queue.concurrency = 1;
+this.queue.autostart = true;
 
 /************************/
 /* Event handle         */
 /************************/
 
-
-
-
 zserver.on('ready', function () {
 	    zserver.permitJoin(timeOut);
-     
+	    setTimeout(function () {
+		zserver.controller.request('UTIL', 'ledControl', {ledid: 3, mode: 0});
+		}, 50000);
 });
 
 zserver.on('permitJoining', function (joinTimeLeft) {
-	console.log(chalk.green('[ permitJoining ] ') + joinTimeLeft + ' sec');
+	console.log('[ permitJoining ] ' + joinTimeLeft + ' sec');
 });
-
 
 zserver.on('error', function (err) {
-	errorInd(err.message);
+    console.log(err);
 });
-
 
 zserver.on('ind', function (msg) {
 	
 	        switch (msg.type) {
-     
+				
+				
+			case 'dataConfirm':
+			console.log('[ dataConfirm ] ' + JSON.stringify(msg.data) + ' ' + JSON.stringify(msg.cId));
+			 break;
             case 'attReport':
             case 'devChange': {
-		console.log(chalk.green('[ Report & Change ] ') 
-			+ ' ' + msg.type 
-			+ ' ' + msg.endpoints[0].device.type 
-			+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
-			+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
-			+ ' manufId ' + msg.endpoints[0].device.manufId 
-			+ ' manufName ' + msg.endpoints[0].device.manufName 
-			+ ' powerSource ' + msg.endpoints[0].device.powerSource 
-			+ ' modelId ' + msg.endpoints[0].device.modelId 
-			+ ' data ' + JSON.stringify(msg.data));	
+				console.log('[ Report & Change ] ' 
+					+ ' ' + msg.type 
+					+ ' ' + msg.endpoints[0].device.type 
+					+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
+					+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
+					+ ' manufId ' + msg.endpoints[0].device.manufId 
+					+ ' manufName ' + msg.endpoints[0].device.manufName 
+					+ ' powerSource ' + msg.endpoints[0].device.powerSource 
+					+ ' modelId ' + msg.endpoints[0].device.modelId 
+					+ ' data ' + JSON.stringify(msg.data));	
 
-		var jeedomchange = JSON.stringify({
-			Type: msg.type,
-			Typedev: msg.endpoints[0].device.type,
-			ieeeAddr: msg.endpoints[0].device.ieeeAddr,
-			nwkAddr: msg.endpoints[0].device.nwkAddr,
-			manufId: msg.endpoints[0].device.manufId,
-			manufName: msg.endpoints[0].device.manufName,
-			powerSource: msg.endpoints[0].device.powerSource,
-			modelId: msg.endpoints[0].device.modelId,
-			epId: msg.endpoints[0].epId,
-			data: msg.data,
-			});
+				var jeedomchange = JSON.stringify({
+										Type: msg.type,
+										Typedev: msg.endpoints[0].device.type,
+										ieeeAddr: msg.endpoints[0].device.ieeeAddr,
+										nwkAddr: msg.endpoints[0].device.nwkAddr,
+										manufId: msg.endpoints[0].device.manufId,
+										manufName: msg.endpoints[0].device.manufName,
+										powerSource: msg.endpoints[0].device.powerSource,
+										modelId: msg.endpoints[0].device.modelId,
+										epId: msg.endpoints[0].epId,
+										data: msg.data,
+									});
 									
-		var buff = new Buffer(jeedomchange);  
-		var base64data = buff.toString('base64');
-//		console.log('"' + jeedomchangegenOnOff + '" converted to Base64 is "' + base64data + '"'); 
-		var urljeedomchange = 'http://192.168.1.54:8122/'+base64data;
-		request(urljeedomchange, function (error, response, body) {
+				var buff = new Buffer(jeedomchange);  
+				var base64data = buff.toString('base64');
+//			console.log('"' + jeedomchangegenOnOff + '" converted to Base64 is "' + base64data + '"'); 
+				var urljeedomchange = 'http://192.168.1.54:8122/'+base64data;
+				request(urljeedomchange, function (error, response, body) {
                 if (error) { console.log("--- Error send request http report & Change:", error); }
               });
-		}
+			}
             break;
 
           
@@ -122,111 +127,103 @@ zserver.on('ind', function (msg) {
             case 'cmdTradfriArrowHold':
             case 'cmdTradfriArrowRelease':
             case 'cmdStepWithOnOff': {
-			console.log(chalk.green('[ CMD ] ') 
-				+ ' ' + msg.type 
-				+ ' ' + msg.endpoints[0].device.type 
-				+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
-				+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
-				+ ' manufName ' + msg.endpoints[0].device.manufName 
-				+ ' manufId ' + msg.endpoints[0].device.manufId 
-				+ ' powerSource ' + msg.endpoints[0].device.powerSource 
-				+ ' modelId ' + msg.endpoints[0].device.modelId 
-				+ ' clusterid ' + msg.data.cid);
+				console.log('[ CMD ] ' 
+										+ ' ' + msg.type 
+										+ ' ' + msg.endpoints[0].device.type 
+										+ ' ieeeAddr ' + msg.endpoints[0].device.ieeeAddr 
+										+ ' nwkAddr ' + msg.endpoints[0].device.nwkAddr 
+										+ ' manufName ' + msg.endpoints[0].device.manufName 
+										+ ' manufId ' + msg.endpoints[0].device.manufId 
+										+ ' powerSource ' + msg.endpoints[0].device.powerSource 
+										+ ' modelId ' + msg.endpoints[0].device.modelId 
+										+ ' clusterid ' + msg.data.cid 
+										+ ' groupid ' + msg.groupid 
+										+ ' linkquality ' + msg.linkquality);
 										
-			var jeedom = JSON.stringify({
-				Type: msg.type,
-				Typedev: msg.endpoints[0].device.type,
-				ieeeAddr: msg.endpoints[0].device.ieeeAddr,
-				nwkAddr: msg.endpoints[0].device.nwkAddr,
-				manufId: msg.endpoints[0].device.manufId,
-				manufName: msg.endpoints[0].device.manufName,
-				powerSource: msg.endpoints[0].device.powerSource,
-				modelId: msg.endpoints[0].device.modelId,
-				epId: msg.endpoints[0].epId,
-				data: msg.data,
-				clusterid: msg.data.cid,
-			});
+				var jeedom = JSON.stringify({
+					Type: msg.type,
+					Typedev: msg.endpoints[0].device.type,
+					ieeeAddr: msg.endpoints[0].device.ieeeAddr,
+					nwkAddr: msg.endpoints[0].device.nwkAddr,
+					manufId: msg.endpoints[0].device.manufId,
+					manufName: msg.endpoints[0].device.manufName,
+					powerSource: msg.endpoints[0].device.powerSource,
+					modelId: msg.endpoints[0].device.modelId,
+					epId: msg.endpoints[0].epId,
+					data: msg.data,
+					clusterid: msg.data.cid,
+					groupid: msg.groupid,
+					linkquality: msg.linkquality,
+				});
 												
-			var buff = new Buffer(jeedom);  
-			var base64 = buff.toString('base64');
-			var urljeedom = 'http://192.168.1.54:8122/'+base64;
-			request(urljeedom, function (error, response, body) {
+				var buff = new Buffer(jeedom);  
+				var base64 = buff.toString('base64');
+				var urljeedom = 'http://192.168.1.54:8122/'+base64;
+				request(urljeedom, function (error, response, body) {
                 if (error) { console.log("--- Error send request http CMD:", error); }
               });
             }
-	break;
+            break;
 			
 			
-	case 'devIncoming':
-	devIncomingInd(getDevInfo(msg.data, msg.endpoints));
+			case 'devIncoming':
+				devIncomingInd(getDevInfo(msg.data, msg.endpoints));
+
+            break;
+
+			case 'devStatus':
+				devStatusInd(msg.endpoints[0].getIeeeAddr(), msg.data);
         break;
 
-	case 'devStatus':
-	devStatusInd(msg.endpoints[0].getIeeeAddr(), msg.data);
-        break;
-
-        case 'devInterview':
-	console.log(chalk.red('[ devInterview ] ') + JSON.stringify(msg.data) + ' interview!');
-        break;
+            case 'devInterview':
+				console.log('[ devInterview ] ' + JSON.stringify(msg.data) + ' interview!');
+            break;
                 
-        case 'devLeaving':
-        leavingDevice(msg);
-        break;
+            case 'devLeaving':
+                leavingDevice(msg);
+            break;
                
-        default:
-        console.log('Type de callback non definit! > ' + msg.type);
-        break;
+            default:
+                console.log('Type de callback non definit! > ' + msg.type);
+            break;
         }
-});
-
+    });
 
 
 /**********************************/
 /* Indication function demo       */
 /**********************************/
 
-function errorInd (msg) {
-    console.log(chalk.red('[ error ] ') + msg);
-}
-
 function devIncomingInd (dev) {
-    console.log(chalk.yellow('[   devIncoming ] ') + '@' + dev.permAddr);
+    console.log('[   devIncoming ] ' + '@' + dev.permAddr);
 }
 
 function devStatusInd (permAddr, status) {
-    status = (status === 'online') ? chalk.green(status) : chalk.red(status);
-    console.log(chalk.magenta('[ devStatus ] ') + '@' + permAddr + ', ' + status);
+    status = (status === 'online') ? status : status;
+    console.log('[ devStatus ] ' + '@' + permAddr + ', ' + status);
 }
-
-function attrsChangeInd (permAddr, gad) {
-   console.log(chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', auxId: ' + gad.auxId + ', value: ' + gad.value);
-}
-
-function attrsreportInd (permAddr, gad) {
-    console.log(chalk.blue('[   attrsChange ] ') + '@' + permAddr + ', auxId: ' + gad.auxId + ', value: ' + gad.value);
-}
-
 
 function leavingDevice(msg) {
-        console.log('device ' + msg.data + ' leaving the network!');
-    }
+    console.log('device ' + msg.data + ' leaving the network!');
+}
 
  function getDevice(ieeeAddr) {
-        return getDevices().find((d) => d.ieeeAddr === ieeeAddr);
-    }
+   return getDevices().find((d) => d.ieeeAddr === ieeeAddr);
+}
 
 function  getDevices() {
-        return zserver.list();
-    }
+   return zserver.list();
+}
+
 
 /**********************************/
 /* welcome function               */
 /**********************************/
 function showWelcomeMsg() {
-var zbPart1 = chalk.blue('      ____   ____ _____ ___   ____ ____        ____ __ __ ____ ___   __ __ ____ ___   ___     '),
-    zbPart2 = chalk.blue('     /_  /  /  _// ___// _ ) / __// __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\ '),
-    zbPart3 = chalk.blue('      / /_ _/ / / (_ // _  |/ _/ / _/  /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /  '),
-    zbPart4 = chalk.blue('     /___//___/ \\___//____//___//___/       /___//_//_//___//_/   /_//_//___//_/|_|/____/    ');
+var zbPart1 = '      ____   ____ _____ ___   ____ ____        ____ __ __ ____ ___   __ __ ____ ___   ___     ',
+    zbPart2 = '     /_  /  /  _// ___// _ ) / __// __/ ____  / __// // // __// _ \\ / // // __// _ \\ / _ \\ ',
+    zbPart3 = '      / /_ _/ / / (_ // _  |/ _/ / _/  /___/ _\\ \\ / _  // _/ / ___// _  // _/ / , _// // /  ',
+    zbPart4 = '     /___//___/ \\___//____//___//___/       /___//_//_//___//_/   /_//_//___//_/|_|/____/    ';
 
     console.log('');
     console.log('');
@@ -236,7 +233,7 @@ var zbPart1 = chalk.blue('      ____   ____ _____ ___   ____ ____        ____ __
     console.log(zbPart2);
     console.log(zbPart3);
     console.log(zbPart4);
-    console.log(chalk.gray('         A network server and manager for the ZigBee machine network'));
+    console.log('         A network server and manager for the ZigBee machine network');
     console.log('');
     console.log('   >>> Author:     Jack Wu (jackchased@gmail.com)              ');
     console.log('   >>> Version:    zigbee-shepherd v0.2.0                      ');
@@ -250,29 +247,19 @@ var zbPart1 = chalk.blue('      ____   ____ _____ ___   ____ ____        ____ __
 /**********************************/
 /* goodBye function               */
 /**********************************/
-function setLeaveMsg() {
-    process.stdin.resume();
-
-    function showLeaveMessage() {
+function showLeaveMessage() {
         console.log(' ');
-        console.log(chalk.blue('      _____              __      __                  '));
-        console.log(chalk.blue('     / ___/ __  ___  ___/ /____ / /  __ __ ___       '));
-        console.log(chalk.blue('    / (_ // _ \\/ _ \\/ _  //___// _ \\/ // // -_)   '));
-        console.log(chalk.blue('    \\___/ \\___/\\___/\\_,_/     /_.__/\\_, / \\__/ '));
-        console.log(chalk.blue('                                   /___/             '));
+        console.log('      _____              __      __                  ');
+        console.log('     / ___/ __  ___  ___/ /____ / /  __ __ ___       ');
+        console.log('    / (_ // _ \\/ _ \\/ _  //___// _ \\/ // // -_)   ');
+        console.log('    \\___/ \\___/\\___/\\_,_/     /_.__/\\_, / \\__/ ');
+        console.log('                                   /___/             ');
         console.log(' ');
         console.log('    >>> This is a simple demonstration of how the shepherd works.');
         console.log('    >>> Please visit the link to know more about this project:   ');
-        console.log('    >>>   ' + chalk.yellow('https://github.com/zigbeer/zigbee-shepherd'));
+        console.log('    >>>   ' + 'https://github.com/zigbeer/zigbee-shepherd');
         console.log(' ');
-        process.exit();
-    }
-
-    process.on('SIGINT', showLeaveMessage);
 }
-
-
-
 
 /**********************************/
 /* Indication function iobroker   */
@@ -280,13 +267,11 @@ function setLeaveMsg() {
 
    
 function onReady() {
-
- 
     // get and list all registered devices
     let activeDevices = getAllClients();
     activeDevices.forEach(device => {
 		configureDevice(device);
-		if ((device.manufId === 4151) || (device.manufId === 4447)) {
+		if ((device.manufId === 4151) || (device.manufId === 4447 || 4476)) {
                 zserver.find(device.ieeeAddr, device.epList[0]).getDevice().update({
                      status: 'online',
                      joinTime: Math.floor(Date.now() / 1000),
@@ -295,9 +280,44 @@ function onReady() {
     });
 }
 
-function errorInd (msg) {
-    console.log('[ error ] ' + msg);
+
+function pingall2() {
+    // get and list all registered devices
+	const devices = getAllClients();
+        devices.forEach((device) => {
+            if ((device.manufId === 4151) || (device.manufId === 4447) || (device.manufId === 4476)) {
+//            .forEach((d) => this.ping(d.ieeeAddr)); // Ping devices.  
+	console.log('for ' + device.ieeeAddr + ' status ' + device.status);
+    }
+});
 }
+
+   
+function pingall() {
+    // get and list all registered devices
+    let activeDevices = getAllClients()
+    .filter((d) => d.type === 'Router') // Filter routers
+
+    activeDevices.forEach(function(device, index) {
+//            .forEach((d) => this.ping(d.ieeeAddr)); // Ping devices.  
+    setTimeout(function () {  
+		console.log('ping ' + device.ieeeAddr + ' status ' + device.status);
+     	ping(device.ieeeAddr);
+            		}, 20000 * (index + 1));
+      
+    });
+
+}
+
+function ping(deviceID) {
+        const device = zserver._findDevByAddr(deviceID);
+        const ieeeAddr = device.ieeeAddr;
+        if (device) {
+            console.log('Check online' + ieeeAddr);
+            zserver.controller.checkOnline(device);
+        }
+}    
+    
 
 function getDevices() {
         return zserver.list();
@@ -320,13 +340,6 @@ function configureDevice(device) {
         }
     }
 }
-
-function  handleInterval() {
-        zserver.getAllClients()
-            .filter((d) => d.type === 'Router') // Filter routers
-            .filter((d) => d.powerSource && d.powerSource !== 'Battery') // Remove battery powered devices
-            .forEach((d) => zserver.ping(d.ieeeAddr)); // Ping devices.
-    }
 
 function getCoordinator() {
         const device = zserver.list().find((d) => d.type === 'Coordinator');
@@ -354,31 +367,24 @@ function getDevInfo (ieeeAddr, eps) {
 /**********************************/
 /* start shepherd                 */
 /**********************************/
-zserver.start((error) => {
-            if (error) {
-                console.log('Error while starting zigbee-shepherd, attemping to fix... (takes 60 seconds)');
-                
-                setTimeout(() => {
-                    console.log(`Starting zigbee-shepherd`);
-                    zserver.start((error) => {
-                        if (error) {
-                            console.log('Error while starting zigbee-shepherd!');
-                            console.log(
-                                'Press the reset button on the stick (the one closest to the USB) and start again'
-                            );
-                            } else {
-									showWelcomeMsg();
-									zserver.emit('ready');
-									zserver.controller.request('UTIL', 'ledControl', {ledid: 3, mode: 0});
-							}
-                    });
-                }, 60000);
+zserver.start((err) => {
+	showWelcomeMsg();
+	if (err) {
+    console.log('Error while starting zigbee-shepherd, attemping to fix... (takes 60 seconds)');
+    setTimeout(() => {
+		console.log(`Starting zigbee-shepherd`);
+        zserver.start((error) => {
+			if (error) {
+            console.log('Error while starting zigbee-shepherd!', error);
             } else {
-									showWelcomeMsg();
-									zserver.emit('ready');
-									zserver.controller.request('UTIL', 'ledControl', {ledid: 3, mode: 0});
+              console.log('zigbee-shepherd started');
             }
-        });
+                    });
+    }, 60 * 1000);
+    } else {
+    console.log('zigbee-shepherd started!');
+    }
+});
 
 
 /**********************************/
@@ -391,7 +397,7 @@ rest.get('/genOnOff', function(req, res){
 	var commande = req.query.commande;
 	var epid = req.query.epid;
 	var ep = zserver.find(appareil, + epid);
-	console.log(chalk.white('[ getcommmand ] ') + ' commande ' + commande + ' pour ' + appareil);
+	console.log('[ getcommmand ] ' + ' commande ' + commande + ' pour ' + appareil);
 	ep.functional('genOnOff', commande, {}, function (err) {
             if(!err){
                 res.send(true);
@@ -472,7 +478,7 @@ rest.get('/bindcoordinatorep1', function(req, res){
     var coordinator = zserver.find('0x00124b0018ecde4f', 1);
 	var appareil = req.param('appareil');
 	var ep = zserver.find(appareil, 1);
-	console.log(chalk.white('[ getbindcoordinatorep1 ] ') + appareil);
+	console.log('[ getbindcoordinatorep1 ] ' + appareil);
 	ep.bind('genOnOff', coordinator, function (err) {
             if(!err){
 				console.log('Successfully bind ' + appareil + ' to coordinator!');
@@ -506,7 +512,7 @@ rest.get('/bindep', function(req, res){
 	var ep2 = req.query.ep2;
 	var device1 = zserver.find(appareil1, + ep1);
 	var device2 = zserver.find(appareil2, + ep2);
-	console.log(chalk.white('[ getbindshepherd ] ') + appareil1 + '  ' + ep1 + ' with ' + appareil2 + '  ' + ep2 );
+	console.log('[ getbindshepherd ] ' + appareil1 + '  ' + ep1 + ' with ' + appareil2 + '  ' + ep2 );
 	device1.bind('genOnOff', device2, function (err) {
             if(!err){
 				console.log('Successfully bind ' + appareil1 + '  ' + ep1 + ' with ' + appareil2 + '  ' + ep2);
@@ -525,7 +531,7 @@ rest.get('/bindgroup', function(req, res){
 	var epId = req.query.epId;
 	var group = req.query.group;
 	var device = zserver.find(ieeeAddr, + epId);
-	console.log(chalk.white('[ getbindgroup ] ') + ieeeAddr + '  ' + epId + ' with ' + group );
+	console.log('[ getbindgroup ] ' + ieeeAddr + '  ' + epId + ' with ' + group );
 	device.bind('genOnOff', + group, function (err, data) {
 					if (!err) {
 						console.log(data);
@@ -543,7 +549,7 @@ rest.get('/unbindgroup', function(req, res){
 	var epId = req.query.epId;
 	var group = req.query.group;
 	var device = zserver.find(ieeeAddr, + epId);
-	console.log(chalk.white('[ getbindgroup ] ') + ieeeAddr + '  ' + epId + ' with ' + group );
+	console.log('[ getbindgroup ] ' + ieeeAddr + '  ' + epId + ' with ' + group );
 	device.unbind('genOnOff', + group, function (err, data) {
 					if (!err) {
 						console.log(data);
@@ -924,28 +930,70 @@ zserver.controller.request('AF', cmd, afParams, function (err, data) {
 /**********************************/
 
 rest.get('/zdo', function(req, res){
+	var addr_short_long = req.query.addr_short_long;
+	var addrmode = req.query.addrmode;
+	var capability = req.query.capability;
+	var capinfo = req.query.capinfo;
+	var channelmask = req.query.channelmask;
 	var cmd = req.query.cmd;
-	var tags = req.query.tags;
-	var group = req.query.group;
-	var groupname = req.query.groupname;
-	var dstaddr = req.query.dstaddr;
-	var nwkaddrofinterest = req.query.nwkaddrofinterest;
-	var endpoint = req.query.endpoint;
-	var namelen = req.query.namelen;
-	var transid = req.query.transid;
-	var options = req.query.options;
-	var radius = req.query.radius;
-	var relaycount = req.query.relaycount;  
-	var relaylist = req.query.relaylist;
-	var len = req.query.len;
+	var clusterid = req.query.clusterid;
 	var data1 = req.query.data1;
 	var data2 = req.query.data2;
-	var data3 = req.query.data3;	
-	
-	if (cmd == 'powerDescReq') {
-	var zcldata = {
-            dstaddr: tag1,
-            nwkaddrofinterest: tag2,
+	var data3 = req.query.data3;
+  	var descriptor_len = req.query.descriptor_len;
+	var deviceaddress = req.query.deviceaddress;
+	var deviceaddr = req.query.deviceaddr;
+	var dstaddr = req.query.dstaddr;
+	var dstaddrmode = req.query.dstaddrmode;
+	var dstendpoint = req.query.dstendpoint;
+  	var duration = req.query.duration;
+  	var endpoint = req.query.endpoint;
+	var group = req.query.group;
+	var groupname = req.query.groupname;
+	var ieeeaddr = req.query.ieeeaddr;
+  	var inclusterlist = req.query.inclusterlist;
+  	var localcoord = req.query.localcoord;
+	var localieee = req.query.localieee;
+	var len = req.query.len;
+	var namelen = req.query.namelen;
+  	var nwkaddr = req.query.nwkaddr;
+	var nwkaddrofinterest = req.query.nwkaddrofinterest;
+	var nwkmanageraddr = req.query.nwkmanageraddr;
+  	var numinclusters = req.query.numinclusters;
+	var numoutclusters = req.query.numoutclusters;
+	var options = req.query.options;
+	var outclusterlist = req.query.outclusterlist;
+  	var profileid = req.query.profileid;
+	var radius = req.query.radius;
+	var relaycount = req.query.relaycount;
+	var relaylist = req.query.relaylist;
+    var removechildren_rejoin = req.query.removechildren_rejoin;
+	var reqtype = req.query.reqtype;
+	var scanchannels = req.query.scanchannels;
+	var scancount = req.query.scancount;
+	var scanduration = req.query.scanduration;
+  	var servermask = req.query.servermask;
+	var srcaddr = req.query.srcaddr;
+  	var srcendpoint = req.query.srcendpoint;
+	var startindex = req.query.startindex;
+	var startdelay = req.query.startdelay;
+	var tags = req.query.tags;
+  	var tcsignificance = req.query.tcsignificance;
+	var transid = req.query.transid;
+	var userdescriptor = req.query.userdescriptor;
+
+  
+   if (cmd == 'nwkAddrReq') {
+		var zcldata = {
+            ieeeaddr: ieeeaddr,
+            reqtype: + reqtype,
+            startindex: + startindex
+        };
+	} else if (cmd == 'ieeeAddrReq') {
+		var zcldata = {
+            shortaddr: dstaddr,
+            reqtype: + reqtype,
+            startindex: + startindex
         };
 	} else if (cmd == 'simpleDescReq') {
 		var zcldata = {
@@ -953,6 +1001,108 @@ rest.get('/zdo', function(req, res){
             nwkaddrofinterest: nwkaddrofinterest,
             endpoint: + endpoint
         };
+	} else if ((cmd == 'activeEpReq') || (cmd == 'userDescReq') || (cmd == 'powerDescReq') || (cmd == 'nodeDescReq') || (cmd == 'complexDescReq') ) {
+		var zcldata = {
+            dstaddr: dstaddr,
+            nwkaddrofinterest: nwkaddrofinterest,
+        };
+	} else if (cmd == 'matchDescReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            nwkaddrofinterest: nwkaddrofinterest,
+          	profileid:	+ profileid,
+          	numinclusters:	+ numinclusters,
+          	inclusterlist:	+ inclusterlist,
+          	numoutclusters:	+ numoutclusters,
+          	outclusterlist:	+ outclusterlist,
+        };
+	} else if (cmd == 'endDeviceAnnce') {
+		var zcldata = {
+            nwkaddr: nwkaddr,
+            ieeeaddr: ieeeaddr,
+            capability: capability,
+        };
+	} else if (cmd == 'userDescSet') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            nwkaddrofinterest: nwkaddrofinterest,
+            descriptor_len: + descriptor_len,
+            userdescriptor: + userdescriptor,
+        };
+	}  else if (cmd == 'serverDiscReq') {
+		var zcldata = {
+            servermask: + servermask,
+        };
+	} else if (cmd == 'endDeviceBindReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            localcoord: + localcoord,
+            localieee: localieee,
+            endpoint: + endpoint,
+            profileid: + profileid,
+            numinclusters: + numinclusters,
+            inclusterlist: + inclusterlist,
+            numoutclusters: + numoutclusters,
+			outclusterlist: + outclusterlist,
+          };
+	} else if ((cmd == 'bindReq') || (cmd == 'unbindReq')) {
+		var zcldata = {
+            dstaddr: dstaddr,
+            srcaddr: srcaddr,
+            srcendpoint: + srcendpoint,
+            clusterid: + clusterid,
+            dstaddrmode: + dstaddrmode,
+            addr_short_long: addr_short_long,
+            dstendpoint: + dstendpoint,
+          };
+	} else if (cmd == 'mgmtNwkDiscReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            scanchannels: + scanchannels,
+            scanduration: + scanduration,
+            startindex: + startindex,
+          };
+	} else if ((cmd == 'mgmtLqiReq') || (cmd == 'mgmtRtgReq') || (cmd == 'mgmtBindReq')) {
+		var zcldata = {
+            dstaddr: dstaddr,
+            startindex: + startindex,
+          };
+	} else if (cmd == 'mgmtLeaveReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            deviceaddress: deviceaddress,
+			removechildren_rejoin : + removechildren_rejoin,
+          };
+	} else if (cmd == 'mgmtDirectJoinReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            deviceaddr: deviceaddr,
+			capinfo  : + capinfo,
+          };
+	} else if (cmd == 'mgmtPermitJoinReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            addrmode: + addrmode,
+            duration: + duration,
+            tcsignificance: + tcsignificance,
+          };
+	} else if (cmd == 'mgmtNwkUpdateReq') {
+		var zcldata = {
+            dstaddr: dstaddr,
+            dstaddrmode: + dstaddrmode,
+            channelmask: + channelmask,
+            scanduration: + scanduration,
+            scancount: + scancount,
+            nwkmanageraddr: nwkmanageraddr,
+          };
+	} else if ((cmd == 'msgCbRegister') || (cmd == 'msgCbRemove')) {
+		var zcldata = {
+            clusterid: + clusterid,     
+        };
+	} else if (cmd == 'startupFromApp') {
+		var zcldata = {
+            startdelay: + startdelay,
+          };
 	} else if (cmd == 'extAddGroup') {
 		var zcldata = {
             endpoint: + endpoint,
@@ -982,14 +1132,12 @@ rest.get('/zdo', function(req, res){
 	} 
 //http://192.168.1.56:3000/zdo?cmd=sendData&dstaddr=10&commnd=dataRequest&len=3&data1=0x01&data2=0x4a&data3=0x01
 	
-		
+console.log('Get Request ZDO With ' + cmd + ' and ' + JSON.stringify(zcldata));
 	
-console.log('zdo with ' + cmd + ' and ' + JSON.stringify(zcldata));
-	
-zserver.controller.request('ZDO', cmd, zcldata, function (err, data) {
+zserver.controller._znp.request('ZDO', cmd, zcldata, function (err, result) {
 					if (!err) {
-						console.log(data);
-						res.json(data);
+						console.log(result);
+						res.json(result);
 					} else {
 						console.log(err);
 						res.send(err);
@@ -998,8 +1146,79 @@ zserver.controller.request('ZDO', cmd, zcldata, function (err, data) {
 
 });
 
+/**********************************/
+/* ZShepherd Other Command        */
+/**********************************/
+
+rest.get('/online', function(req, res){
+	var appareil = req.query.appareil;
+	var dev = getDevice(appareil);
+	var ieeeAddr = dev.ieeeAddr;
+  	console.log('Receive GET request online for ' + appareil);
+	if (dev && dev.status === 'online'){
+        console.log('device already online');
+      	res.send('device already online');
+    } else {
+     ping(ieeeAddr);
+     res.send(true);
+  	  }
+});
+
+rest.get('/pingall', function(req, res){
+     pingall();
+     res.send(true);
+
+});
+
+rest.get('/pingall2', function(req, res){
+     pingall2();
+     res.send(true);
+
+});
+
+rest.post('/pingall2', function(req, res){
+     pingall2();
+     res.send(true);
+
+});
+
+
+rest.post('/name', function(req, res) {
+    //Récupération de la propriété name dans le body
+    var resultat = req.body;
+  	var cmd = req.query.cmd;
+    
+console.log('Get Request ' + JSON.stringify(resultat) + ' ' + cmd);
+	
+zserver.controller._znp.request('ZDO', cmd, resultat, function (err, result) {
+					if (!err) {
+						console.log(result);
+						res.json(result);
+					} else {
+						console.log(err);
+						res.send(err);
+					}
+});
+});
+
 //http://192.168.1.56:3000/af?cmd=dataRequestExt&dstaddrmode=1&dstpanid=0&dstaddr=0x000000000000000a&destendpoint=1&srcendpoint=1&clusterid=6&len=3&data1=0x01&data2=0x4a&data3=0x00
 
-    
 //Initialisation du listener pour recevoir les requêtes POSTs et GETs
-rest.listen(listenPort);
+const server = rest.listen(listenPort, function onStart(err) {
+  if (err) {
+    console.log(err);
+  } else {
+  console.info('==> App Listening on port %s.', listenPort);
+}
+});
+
+process.on('SIGTERM', () => {
+	console.info('SIGTERM signal received.');
+    console.log('Closing http server.');
+	server.close(() => {
+    console.log('Http server closed.');
+	});
+	this.queue.stop();
+	showLeaveMessage();
+    process.exit();
+});
