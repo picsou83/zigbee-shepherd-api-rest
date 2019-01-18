@@ -1,5 +1,3 @@
-only use get request to interact with zigbee shepherd
-
 # zigbee-shepherd-api-rest
 
 Use [zigbee-shepherd](https://github.com/zigbeer/zigbee-shepherd) since REST API and swagger-ui-express  
