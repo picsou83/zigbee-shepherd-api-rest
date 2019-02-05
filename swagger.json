@@ -1,12 +1,10 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "description": "API REST For Zigbee-Shepherd & CC-ZNP",
     "version": "1.0.0",
     "title": "API REST For Zigbee-Shepherd & CC-ZNP"
   },
-  "host": "192.168.1.56:3000",
-  "basePath": "/",
   "tags": [
     {
       "name": "Manage Coordinator",
@@ -21,20 +19,17 @@
       "description": ""
     },
     {
-      "name": "ZDO Command ",
+      "name": "ZDO Command",
       "description": ""
     },
     {
-      "name": "UTIL Command ",
+      "name": "UTIL Command",
       "description": ""
     },
     {
-      "name": "SYS Command ",
+      "name": "SYS Command",
       "description": ""
     }
-  ],
-  "schemes": [
-    "http"
   ],
   "paths": {
     "/info": {
@@ -45,10 +40,6 @@
         "summary": "Returns shepherd information.",
         "description": "Returns shepherd information.",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [],
         "responses": {
           "200": {
             "description": "successful operation"
@@ -64,16 +55,15 @@
         "summary": "Lists the information of devices managed by shepherd",
         "description": "The argument accepts a single ieee address ",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "ieeeAddr",
             "in": "query",
             "description": "The ieee Address ex: 0x00124b0001ce4beb",
             "required": false,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -94,16 +84,15 @@
         "summary": "Query the link quality index",
         "description": "The argument accepts a single ieee address ",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "ieeeAddr",
             "in": "query",
             "description": "The ieee Address ex: 0x00124b0001ce4beb",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -124,16 +113,15 @@
         "summary": "Remove the device from the network",
         "description": "The argument accepts a single ieee address ",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "ieeeAddr",
             "in": "query",
             "description": "The ieee Address ex: 0x00124b0001ce4beb",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -154,19 +142,18 @@
         "summary": "Allow or disallow devices to join the network.",
         "description": "The argument accepts a time second ",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "time",
             "in": "query",
             "description": "time in second ex: 60",
             "required": true,
-            "type": "integer",
-            "maximum": 255,
-            "minimum": 1,
-            "format": "int64"
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 1,
+              "maximum": 255
+            }
           }
         ],
         "responses": {
@@ -187,19 +174,18 @@
         "summary": "Reset the ZNP.",
         "description": "Set to 'hard' or 0 to trigger the hardware reset (SoC resets), and set to 'soft' or 1 to trigger the software reset (zstack resets).",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "mode",
             "in": "query",
             "description": "0 for soft and 1 for hard reset ex: 0",
             "required": true,
-            "type": "integer",
-            "maximum": 1,
-            "minimum": 0,
-            "format": "int64"
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 1
+            }
           }
         ],
         "responses": {
@@ -220,26 +206,27 @@
         "summary": "Returns the simple descriptor of the endpoint",
         "description": "The argument accepts ieee address and endpoint ID of device ",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "ieeeAddr",
             "in": "query",
             "description": "The ieee Address ex: 0x00124b0001ce4beb",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "epId",
             "in": "query",
             "description": "The epId of device ex: 1",
             "required": true,
-            "type": "integer",
-            "maximum": 255,
-            "minimum": 0,
-            "format": "int64"
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 255
+            }
           }
         ],
         "responses": {
@@ -260,26 +247,27 @@
         "summary": "Send ZCL functional command to this endpoint",
         "description": "The argument accepts ieee address and endpoint ID of device and Cluster id",
         "operationId": "",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "ieeeAddr",
             "in": "query",
             "description": "The ieee Address ex: 0x00124b0001ce4beb",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "name": "epId",
             "in": "query",
             "description": "The epId of device ex: 1",
             "required": true,
-            "type": "integer",
-            "maximum": 255,
-            "minimum": 0,
-            "format": "int64"
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 255
+            }
           }
         ],
         "responses": {
@@ -292,771 +280,347 @@
         }
       }
     },
-    "/list2": {
-      "get": {
+    "/zdo/{group}": {
+      "post": {
         "tags": [
-          "Manage Coordinator"
+          "ZDO Command"
         ],
-        "summary": "Lists the information of devices managed by shepherd",
-        "description": "The argument accepts a single ieee address ",
+        "summary": "Manage Group of coordinator",
+        "description": "**ZDO_EXT_FIND_ALL_GROUPS_ENDPOINT (required endpoint)**\n\nThis command handles the ZDO extension find all groups for endpoint message\n\n**ZDO_EXT_ADD_GROUP (required endpoint & groupid & groupname)**\n\nThis command handles the ZDO extension add group message.\n\n**ZDO_EXT_REMOVE_GROUP (required endpoint & groupid)**\n\nThis command handles the ZDO extended remove group extension message.\n\n**ZDO_EXT_REMOVE_ALL_GROUP (required endpoint)**\n\nThis command handles the ZDO extended remove all group extension message.\n\n**ZDO_EXT_FIND_GROUP (required endpoint & groupid)**\n\nThis command handles the ZDO extension find group message\n\n**ZDO_EXT_COUNT_ALL_GROUPS ()**\n\nThis command handles the ZDO extension count all groups message\n",
         "operationId": "",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
         "parameters": [
           {
-            "name": "ieeeAddr",
-            "in": "query",
-            "description": "Status values that need to be considered for filter",
+            "name": "group",
+            "in": "path",
             "required": true,
-            "type": "array",
-            "items": {
+            "schema": {
               "type": "string",
               "enum": [
-                "available",
-                "pending",
-                "sold"
-              ],
-              "default": "available"
-            },
-            "collectionFormat": "multi"
+                "extFindAllGroupsEndpoint",
+                "extAddGroup",
+                "extRemoveGroup",
+                "extRemoveAllGroup",
+                "extFindGroup",
+                "extCountAllGroups"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pet"
+            "description": "Status is either Success (0) or Failure (1)."
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "endpoint": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "groupid": {
+                    "type": "integer",
+                    "example": 10
+                  },
+                  "namelen": {
+                    "type": "integer",
+                    "example": null
+                  },
+                  "groupname": {
+                    "type": "string",
+                    "example": "group10"
+                  }
+                }
               }
             }
           },
-          "400": {
-            "description": "Invalid status value"
-          }
+          "description": "endpoint => endpoint to look for\n\ngroupid => id to look for group\n\ngroupname => name of group\n",
+          "required": true
         }
       }
     },
-    "/pet/findByTags": {
-      "get": {
+    "/zdo2/{info}": {
+      "post": {
         "tags": [
-          "pet"
+          "ZDO Command"
         ],
-        "summary": "Finds Pets by tags",
-        "description": "Muliple tags can be provided with comma separated strings. Use         tag1, tag2, tag3 for testing.",
-        "operationId": "findPetsByTags",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
+        "summary": "Inquire information of destination device",
+        "description": "**ZDO_NODE_DESC_REQ (required dstaddr & nwkaddrofinterest)**\n\nThis command is generated to inquire about the Node Descriptor information of the\ndestination device\n\n**ZDO_POWER_DESC_REQ (required dstaddr & nwkaddrofinterest)**\n\nThis command is generated to inquire about the Power Descriptor information of the\ndestination device\n\n**ZDO_SIMPLE_DESC_REQ (required dstaddr & nwkaddrofinterest & endpoint)**\n\nThis command is generated to inquire as to the Simple Descriptor of the destination device\nEndpoint.\n\n**ZDO_ACTIVE_EP_REQ (required dstaddr & nwkaddrofinterest)**\n\nThis command is generated to request a list of active endpoint from the destination device.\n\n**ZDO_COMPLEX_DESC_REQ (required endpoint & groupid)** ERROR\n\nThis command is generated to request for the destination device complex descriptor\n\n**ZDO_USER_DESC_REQ (required dstaddr & nwkaddrofinterest)** ERROR\n\nThis command is generated to request for the destination device  user descriptor\n",
+        "operationId": "",
         "parameters": [
           {
-            "name": "tags",
-            "in": "query",
-            "description": "Tags to filter by",
+            "name": "info",
+            "in": "path",
             "required": true,
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "collectionFormat": "multi"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "nodeDescReq",
+                "powerDescReq",
+                "simpleDescReq",
+                "activeEpReq",
+                "complexDescReq",
+                "userDescReq"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Pet"
+            "description": "Status is either Success (0) or Failure (1)."
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dstaddr": {
+                    "type": "string",
+                    "example": 11072
+                  },
+                  "nwkaddrofinterest": {
+                    "type": "string",
+                    "example": 11072
+                  },
+                  "endpoint": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
               }
             }
           },
-          "400": {
-            "description": "Invalid tag value"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Updates a pet in the store with form data",
-        "description": "",
-        "operationId": "updatePetWithForm",
-        "consumes": [
-          "application/x-www-form-urlencoded"
-        ],
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "ID of pet that needs to be updated",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "name",
-            "in": "formData",
-            "description": "Updated name of the pet",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "status",
-            "in": "formData",
-            "description": "Updated status of the pet",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "pet"
-        ],
-        "summary": "Deletes a pet",
-        "description": "",
-        "operationId": "deletePet",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "api_key",
-            "in": "header",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "Pet id to delete",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Pet not found"
-          }
+          "description": "dstaddr => Specifies NWK address of the device generating the inquiry\n\nnwkaddrofinterest => Specifies NWK address of the destination device being queried\n\nendpoint => endpoint to look for\n",
+          "required": true
         }
       }
     },
-    "/pet/{petId}/uploadImage": {
+    "/zdo/nwkAddrReq": {
       "post": {
         "tags": [
-          "pet"
+          "ZDO Command"
         ],
-        "summary": "uploads an image",
-        "description": "",
-        "operationId": "uploadFile",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "petId",
-            "in": "path",
-            "description": "ID of pet to update",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "name": "additionalMetadata",
-            "in": "formData",
-            "description": "Additional data to pass to server",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "file",
-            "in": "formData",
-            "description": "file to upload",
-            "required": false,
-            "type": "file"
-          }
-        ],
+        "summary": "request the device to send a â€œNetwork Address Requestâ€",
+        "description": "**ZDO_NWK_ADDR_REQ**\n\nThis message will request the device to send a â€œNetwork Address Requestâ€. This message sends a\nbroadcast message looking for a 16 bit address with a known 64 bit IEEE address. You must\nsubscribe to â€œZDO Network Address Responseâ€ to receive the response to this message. Check\nsection 3.0.1.7 for more details on callback subscription. The response message listed below only\nindicates whether or not the message was received properly.\n",
+        "operationId": "",
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ApiResponse"
-            }
+            "description": "Status is either Success (0) or Failure (1)."
           }
-        }
-      }
-    },
-    "/store/order": {
-      "post": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Place an order for a pet",
-        "description": "",
-        "operationId": "placeOrder",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "order placed for purchasing the pet",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "400": {
-            "description": "Invalid Order"
-          }
-        }
-      }
-    },
-    "/store/order/{orderId}": {
-      "get": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Find purchase order by ID",
-        "description": "For valid response try integer IDs with value >= 1 and <= 10.         Other values will generated exceptions",
-        "operationId": "getOrderById",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "ID of pet that needs to be fetched",
-            "required": true,
-            "type": "integer",
-            "maximum": 10,
-            "minimum": 1,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Order"
-            }
-          },
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Order not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "store"
-        ],
-        "summary": "Delete purchase order by ID",
-        "description": "For valid response try integer IDs with positive integer value.         Negative or non-integer values will generate API errors",
-        "operationId": "deleteOrder",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "orderId",
-            "in": "path",
-            "description": "ID of the order that needs to be deleted",
-            "required": true,
-            "type": "integer",
-            "minimum": 1,
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Order not found"
-          }
-        }
-      }
-    },
-    "/user": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Create user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "createUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Created user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithArray": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Creates list of users with given input array",
-        "description": "",
-        "operationId": "createUsersWithArrayInput",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "List of user object",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/createWithList": {
-      "post": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Creates list of users with given input array",
-        "description": "",
-        "operationId": "createUsersWithListInput",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "List of user object",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/User"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "default": {
-            "description": "successful operation"
-          }
-        }
-      }
-    },
-    "/user/login": {
-      "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Logs user into the system",
-        "description": "",
-        "operationId": "loginUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "description": "The user name for login",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "The password for login in clear text",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "string"
-            },
-            "headers": {
-              "X-Rate-Limit": {
-                "type": "integer",
-                "format": "int32",
-                "description": "calls per hour allowed by the user"
-              },
-              "X-Expires-After": {
-                "type": "string",
-                "format": "date-time",
-                "description": "date in UTC when token expires"
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ieeeaddr": {
+                    "type": "string",
+                    "example": "0x000d6ffffe7c09ed"
+                  },
+                  "reqtype": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "startindex": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
               }
             }
           },
-          "400": {
-            "description": "Invalid username/password supplied"
-          }
+          "description": "ieeeaddr => 64 bit IEEE address of the device\n\nreqtype => (0 Single Device response) or  (1 Extended, include associated devices) \n\nstartindex  => Starting index into the list of children. This is used to get more of the list if the list is too large for one message\n",
+          "required": true
         }
       }
     },
-    "/user/logout": {
-      "get": {
+    "/zdo/ieeeAddrReq": {
+      "post": {
         "tags": [
-          "user"
+          "ZDO Command"
         ],
-        "summary": "Logs out current logged in user session",
-        "description": "",
-        "operationId": "logoutUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [],
+        "summary": "request a deviceâ€™s IEEE 64-bit address",
+        "description": "**ZDO_IEEE_ADDR_REQ**\n\nThis command will request a deviceâ€™s IEEE 64-bit address. You must subscribe to â€œZDO IEEE\nAddress Responseâ€ to receive the data response to this message. The response message listed\nbelow only indicates whether or not the message was received properly\n",
+        "operationId": "",
         "responses": {
-          "default": {
-            "description": "successful operation"
+          "200": {
+            "description": "Status is either Success (0) or Failure (1)."
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "shortaddr": {
+                    "type": "string",
+                    "example": 5135
+                  },
+                  "reqtype": {
+                    "type": "integer",
+                    "example": 0
+                  },
+                  "startindex": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "description": "shortaddr => Specifies the short address of the device.\n\nreqtype => (0 Single Device response) or  (1 Extended, include associated devices) \n\nstartindex  => Starting index into the list of children. This is used to get more of the list if the list is too large for one message\n",
+          "required": true
         }
       }
     },
-    "/user/{username}": {
-      "get": {
+    "/zdo/endDeviceAnnceInd": {
+      "post": {
         "tags": [
-          "user"
+          "ZDO Command"
         ],
-        "summary": "Get user by user name",
-        "description": "",
-        "operationId": "getUserByName",
-        "produces": [
-          "application/xml",
-          "application/json"
+        "summary": "indicates the ZDO End Device Announce",
+        "description": "**ZDO_END_DEVICE_ANNCE_IND**\n\nThis callback indicates the ZDO End Device Announce\n",
+        "operationId": "",
+        "responses": {
+          "200": {
+            "description": "Status is either Success (0) or Failure (1)."
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "srcaddr": {
+                    "type": "string",
+                    "example": 5135
+                  },
+                  "nwkaddr": {
+                    "type": "string",
+                    "example": 5135
+                  },
+                  "ieeeaddr": {
+                    "type": "string",
+                    "example": "0x000d6ffffe7c09ed"
+                  },
+                  "capabilities": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "description": "srcaddr => Source address of the message.\n\nnwkaddr => Specifies the deviceâ€™s short address.\n\nieeeaddr => Specifies the 64 bit IEEE address of source device\n\ncapabilities  => Specifies the MAC capabilities of the device.\n",
+          "required": true
+        }
+      }
+    },
+    "/zdo/{bind}": {
+      "post": {
+        "tags": [
+          "ZDO Command"
         ],
+        "summary": "Bind and un-bind device and group",
+        "description": "**ZDO_BIND_REQ**\n\nThis command is generated to request a Bind.\n\n**ZDO_UNBIND_REQ (required dstaddr & nwkaddrofinterest)**\n\nThis command is generated to request an un-bind.\n",
+        "operationId": "",
         "parameters": [
           {
-            "name": "username",
+            "name": "bind",
             "in": "path",
-            "description": "The name that needs to be fetched. Use user1 for testing. ",
             "required": true,
-            "type": "string"
+            "schema": {
+              "type": "string",
+              "enum": [
+                "bindReq",
+                "unbindReq"
+              ]
+            }
           }
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/User"
+            "description": "Status is either Success (0) or Failure (1)."
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dstaddr": {
+                    "type": "string",
+                    "example": 0
+                  },
+                  "srcaddr": {
+                    "type": "string",
+                    "example": "0x00124b0018ecde4f"
+                  },
+                  "srcendpoint": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "clusterid": {
+                    "type": "integer",
+                    "example": 6
+                  },
+                  "dstaddrmode": {
+                    "type": "integer",
+                    "example": 3
+                  },
+                  "addr_short_long": {
+                    "type": "string",
+                    "example": "0x000d6ffffe270288"
+                  },
+                  "dstendpoint": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
             }
           },
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Updated user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "name that need to be updated",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid user supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "description": "The name that needs to be deleted",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
+          "description": "dstaddr => NWK address of the device generating the bind request\n\nsrcaddr => 64 bit IEEE address of the device generating the bind request\n\nsrcendpoint => Specifies the binding source endpoint.\n\nclusterid => Specifies the cluster Id to match in messages.\n\n(genOnOff 6 / genLevelCtrl 8) \n\nview https://github.com/zigbeer/zcl-id/wiki#Table\n\ndstaddrmode => Specifies destination address mode\n\n(0 address not present / 1 group address / 2 address 16 bits /3 address 64 bits / 255 broadcast)\n\naddr_short_long => Binding destination IEEE address. Not to be confused with DstAddr.\n\ndstendpoint => Specifies the binding destination endpoint. It is used only when DstAddrMode is 64 bits extended address\n\n**example bind 0x000d6ffffe270288 to group 10 :**\n  dstaddr: 11072\n  srcaddr: '0x000d6ffffe270288'\n  srcendpoint: 1\n  clusterid: 6\n  dstaddrmode: 2\n  addr_short_long: '0x000000000000000a'\n  dstendpoint: 1\n\n**example bind coordinator 0x00124b0018ecde4f to device  0x000d6ffffe270288:** \n  dstaddr: 0\n  srcaddr: '0x00124b0018ecde4f'\n  srcendpoint: 1\n  clusterid: 6\n  dstaddrmode: 3\n  addr_short_long: '0x000d6ffffe270288'\n  dstendpoint: 1\n",
+          "required": true
         }
       }
     }
   },
-  "definitions": {
-    "Order": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "petId": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "quantity": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "shipDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "status": {
-          "type": "string",
-          "description": "Order Status",
-          "enum": [
-            "placed",
-            "approved",
-            "delivered"
-          ]
-        },
-        "complete": {
-          "type": "boolean",
-          "default": false
-        }
+  "servers": [
+    {
+      "url": "http://192.168.1.56:3000/"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "Profile": {
+        "nullable": true,
+        "description": "- \"HA\": 260,   // ZigBee Home Automation\n- \"BA\": 261,   // ZigBee Building Automation\n- \"TS\": 263,   // ZigBee Telecom Services\n- \"HC\": 264,   // ZigBee Health Care\n- \"SE\": 265,   // ZigBee Smart Energy\n- \"RS\": 266,   // ZigBee Retail Services\n- \"LL\": 49246  // ZigBee Light Link\n"
       },
-      "xml": {
-        "name": "Order"
-      }
-    },
-    "Category": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
+      "HA Device ID": {
+        "nullable": true,
+        "description": "- onOffSwitch: 0\n- levelControlSwitch: 1\n- onOffOutput: 2\n- levelControllableOutput: 3\n- sceneSelector: 4\n- configurationTool: 5\n- remoteControl: 6\n- combinedInterface: 7\n- rangeExtender: 8\n- mainsPowerOutlet: 9\n- doorLock: 10\n- doorLockController: 11\n- simpleSensor: 12\n- consumptionAwarenessDevice: 13\n- homeGateway: 80\n- smartPlug: 81\n- whiteGoods: 82\n- meterInterface: 83\n- testDevice: 255\n- onOffLight: 256\n- dimmableLight: 257\n- coloredDimmableLight: 258\n- onOffLightSwitch: 259\n- dimmerSwitch: 260\n- colorDimmerSwitch: 261\n- lightSensor: 262\n- occupancySensor: 263\n- shade: 512\n- shadeController: 513\n- windowCoveringDevice: 514\n- windowCoveringController: 515\n- heatingCoolingUnit: 768\n- thermostat: 769\n- temperatureSensor: 770\n- pump: 771\n- pumpController: 772\n- pressureSensor: 773\n- flowSensor: 774\n- miniSplitAc: 775\n- iasControlIndicatingEquipment: 1024\n- iasAncillaryControlEquipment: 1025\n- iasZone: 1026\n- iasWarningDevice: 1027\n"
       },
-      "xml": {
-        "name": "Category"
-      }
-    },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "username": {
-          "type": "string"
-        },
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "phone": {
-          "type": "string"
-        },
-        "userStatus": {
-          "type": "integer",
-          "format": "int32",
-          "description": "User Status"
-        }
+      "Cluster": {
+        "nullable": true,
+        "description": "- genBasic: 0\n- genPowerCfg: 1\n- genDeviceTempCfg: 2\n- genIdentify: 3\n- genGroups: 4\n- genScenes: 5\n- genOnOff: 6\n- genOnOffSwitchCfg: 7\n- genLevelCtrl: 8\n- genAlarms: 9\n- genTime: 10\n- genRssiLocation: 11\n- genAnalogInput: 12\n- genAnalogOutput: 13\n- genAnalogValue: 14\n- genBinaryInput: 15\n- genBinaryOutput: 16\n- genBinaryValue: 17\n- genMultistateInput: 18\n- genMultistateOutput: 19\n- genMultistateValue: 20\n- genCommissioning: 21\n- genPartition: 22\n- genOta: 25\n- genPowerProfile: 26\n- genApplianceCtrl: 27\n- genPollCtrl: 32\n- genGreenPowerProxy: 33\n- mobileDeviceCfg: 34\n- neighborCleaning: 35\n- nearestGateway: 36\n- closuresShadeCfg: 256\n- closuresDoorLock: 257\n- closuresWindowCovering: 258\n- hvacPumpCfgCtrl: 512\n- hvacThermostat: 513\n- hvacFanCtrl: 514\n- hvacDehumidificationCtrl: 515\n- hvacUserInterfaceCfg: 516\n- lightingColorCtrl: 768\n- lightingBallastCfg: 769\n- msIlluminanceMeasurement: 1024\n- msIlluminanceLevelSensing: 1025\n- msTemperatureMeasurement: 1026\n- msPressureMeasurement: 1027\n- msFlowMeasurement: 1028\n- msRelativeHumidity: 1029\n- msOccupancySensing: 1030\n- ssIasZone: 1280\n- ssIasAce: 1281\n- ssIasWd: 1282\n- piGenericTunnel: 1536\n- piBacnetProtocolTunnel: 1537\n- piAnalogInputReg: 1538\n- piAnalogInputExt: 1539\n- piAnalogOutputReg: 1540\n- piAnalogOutputExt: 1541\n- piAnalogValueReg: 1542\n- piAnalogValueExt: 1543\n- piBinaryInputReg: 1544\n- piBinaryInputExt: 1545\n- piBinaryOutputReg: 1546\n- piBinaryOutputExt: 1547\n- piBinaryValueReg: 1548\n- piBinaryValueExt: 1549\n- piMultistateInputReg: 1550\n- piMultistateInputExt: 1551\n- piMultistateOutputReg: 1552\n- piMultistateOutputExt: 1553\n- piMultistateValueReg: 1554\n- piMultistateValueExt: 1555\n- pi11073ProtocolTunnel: 1556\n- piIso7818ProtocolTunnel: 1557\n- piRetailTunnel: 1559\n- sePrice: 1792\n- seDrlc: 1793\n- seMetering: 1794\n- seMessaging: 1795\n- seTunneling: 1796\n- sePrepayment: 1797\n- seEnergyMgmt: 1798\n- seCalendar: 1799\n- seDeviceMgmt: 1800\n- seEvents: 1801\n- seMduPairing: 1802\n- seKeyEstablishment: 2048\n- telecommunicationsInformation: 2304\n- telecommunicationsVoiceOverZigbee: 2308\n- telecommunicationsChatting: 2309\n- haApplianceIdentification: 2816\n- haMeterIdentification: 2817\n- haApplianceEventsAlerts: 2818\n- haApplianceStatistics: 2819\n- haElectricalMeasurement: 2820\n- haDiagnostic: 2821\n- lightLink: 4096\n- manuSpecificCluster: 65535\n"
       },
-      "xml": {
-        "name": "User"
-      }
-    },
-    "Tag": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "name": {
-          "type": "string"
-        }
+      "Status": {
+        "nullable": true,
+        "description": "- success: 0\n- failure: 1\n- notAuthorized: 126\n- malformedCmd: 128\n- unsupClusterCmd: 129\n- unsupGeneralCmd: 130\n- unsupManuClusterCmd: 131\n- unsupManuGeneralCmd: 132\n- invalidField: 133\n- unsupAttribute: 134\n- invalidValue: 135\n- readOnly: 136\n- insufficientSpace: 137\n- duplicateExists: 138\n- notFound: 139\n- unreportableAttribute: 140\n- invalidDataType: 141\n- invalidSelector: 142\n- writeOnly: 143\n- inconsistentStartupState: 144\n- definedOutOfBand: 145\n- inconsistent: 146\n- actionDenied: 147\n- timeout: 148\n- abort: 149\n- - invalidImage: 150\n- waitForData: 151\n- noImageAvailable: 152\n- requireMoreImage: 153\n- notificationPending: 154\n- hardwareFailure: 192\n- softwareFailure: 193\n- calibrationError: 194\n- unsupportedCluster: 195\n"
       },
-      "xml": {
-        "name": "Tag"
-      }
-    },
-    "Pet": {
-      "type": "object",
-      "required": [
-        "name",
-        "photoUrls"
-      ],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "category": {
-          "$ref": "#/definitions/Category"
-        },
-        "name": {
-          "type": "string",
-          "example": "doggie"
-        },
-        "photoUrls": {
-          "type": "array",
-          "xml": {
-            "name": "photoUrl",
-            "wrapped": true
-          },
-          "items": {
-            "type": "string"
-          }
-        },
-        "tags": {
-          "type": "array",
-          "xml": {
-            "name": "tag",
-            "wrapped": true
-          },
-          "items": {
-            "$ref": "#/definitions/Tag"
-          }
-        },
-        "status": {
-          "type": "string",
-          "description": "pet status in the store",
-          "enum": [
-            "available",
-            "pending",
-            "sold"
-          ]
-        }
-      },
-      "xml": {
-        "name": "Pet"
-      }
-    },
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
+      "Cluster Defs": {
+        "nullable": true,
+        "description": "- genBasic:\n    attrId:\n      zclVersion:\n      id: 0\n      type: uint8\n    appVersion:\n      id: 1\n      type: uint8\n    stackVersion:\n      id: 2\n      type: uint8\n    hwVersion:\n      id: 3\n      type: uint8\n    manufacturerName:\n      id: 4\n      type: charStr\n    modelId:\n      id: 5\n      type: charStr\n    dateCode:\n      id: 6\n      type: charStr\n    powerSource:\n      id: 7\n      type: enum8\n    appProfileVersion:\n      id: 8\n      type: enum8\n    swBuildId:\n      id: 16384\n      type: charStr\n    locationDesc:\n      id: 16\n      type: charStr\n    physicalEnv:\n      id: 17\n      type: enum8\n    deviceEnabled:\n      id: 18\n      type: boolean\n    alarmMask:\n      id: 19\n      type: bitmap8\n    disableLocalConfig:\n      id: 20\n      type: bitmap8\n  cmd:\n    resetFactDefault: 0\n  cmdRsp: null\n- genPowerCfg:\n  attrId:\n    mainsVoltage:\n      id: 0\n      type: uint16\n    mainsFrequency:\n      id: 1\n      type: uint8\n    mainsAlarmMask:\n      id: 16\n      type: bitmap8\n    mainsVoltMinThres:\n      id: 17\n      type: uint16\n    mainsVoltMaxThres:\n      id: 18\n      type: uint16\n    mainsVoltageDwellTripPoint:\n      id: 19\n      type: uint16\n    batteryVoltage:\n      id: 32\n      type: uint8\n    batteryPercentageRemaining:\n      id: 33\n      type: uint8\n    batteryManufacturer:\n      id: 48\n      type: charStr\n    batterySize:\n      id: 49\n      type: enum8\n    batteryAHrRating:\n      id: 50\n      type: uint16\n    batteryQuantity:\n      id: 51\n      type: uint8\n    batteryRatedVoltage:\n      id: 52\n      type: uint8\n    batteryAlarmMask:\n      id: 53\n      type: bitmap8\n    batteryVoltMinThres:\n      id: 54\n      type: uint8\n    batteryVoltThres1:\n      id: 55\n      type: uint8\n    batteryVoltThres2:\n      id: 56\n      type: uint8\n    batteryVoltThres3:\n      id: 57\n      type: uint8\n    batteryPercentMinThres:\n      id: 58\n      type: uint8\n    batteryPercentThres1:\n      id: 59\n      type: uint8\n    batteryPercentThres2:\n      id: 60\n      type: uint8\n    batteryPercentThres3:\n      id: 61\n      type: uint8\n    batteryAlarmState:\n      id: 62\n      type: bitmap32\n  cmd: null\n  cmdRsp: null\n- genDeviceTempCfg:\n  attrId:\n    currentTemperature:\n      id: 0\n      type: int16\n    minTempExperienced:\n      id: 1\n      type: int16\n    maxTempExperienced:\n      id: 2\n      type: int16\n    overTempTotalDwell:\n      id: 3\n      type: uint16\n    devTempAlarmMask:\n      id: 16\n      type: bitmap8\n    lowTempThres:\n      id: 17\n      type: int16\n    highTempThres:\n      id: 18\n      type: int16\n    lowTempDwellTripPoint:\n      id: 19\n      type: uint24\n    highTempDwellTripPoint:\n      id: 20\n      type: uint24\n  cmd: null\n  cmdRsp: null\n- genIdentify:\n  attrId:\n  identifyTime:\n        id: 0\n        type: uint16\n  identifyCommissionState:\n        id: 1\n        type: unknown\n  cmd:\n    identify: 0\n    identifyQuery: 1\n    ezmodeInvoke: 2\n    updateCommissionState: 3\n    triggerEffect: 64\n  cmdRsp:\n    identifyQueryRsp: 0\n- genGroups:\n  attrId:\n    nameSupport:\n      id: 0\n      type: bitmap8\n  cmd:\n    add: 0\n    view: 1\n    getMembership: 2\n    remove: 3\n    removeAll: 4\n    addIfIdentifying: 5\n  cmdRsp:\n    addRsp: 0\n    viewRsp: 1\n    getMembershipRsp: 2\n    removeRsp: 3\n- genScenes:\n  attrId:\n    count:\n      id: 0\n      type: uint8\n    currentScene:\n      id: 1\n      type: uint8\n    currentGroup:\n      id: 2\n      type: uint16\n    sceneValid:\n      id: 3\n      type: boolean\n    nameSupport:\n      id: 4\n      type: bitmap8\n    lastCfgBy:\n      id: 5\n      type: ieeeAddr\n  cmd:\n    add: 0\n    view: 1\n    remove: 2\n    removeAll: 3\n    store: 4\n    recall: 5\n    getSceneMembership: 6\n    enhancedAdd: 64\n    enhancedView: 65\n    copy: 66\n  cmdRsp:\n    addRsp: 0\n    viewRsp: 1\n    removeRsp: 2\n    removeAllRsp: 3\n    storeRsp: 4\n    getSceneMembershipRsp: 6\n    enhancedAddRsp: 64\n    enhancedViewRsp: 65\n    copyRsp: 66\ngenOnOff:\n  attrId:\n    onOff:\n      id: 0\n      type: boolean\n    globalSceneCtrl:\n      id: 16384\n      type: boolean\n    onTime:\n      id: 16385\n      type: uint16\n    offWaitTime:\n      id: 16386\n      type: uint16\n  cmd:\n    'off': 0\n    'on': 1\n    toggle: 2\n    offWithEffect: 64\n    onWithRecallGlobalScene: 65\n    onWithTimedOff: 66\n  cmdRsp: null\ngenOnOffSwitchCfg:\n  attrId:\n    switchType:\n      id: 0\n      type: enum8\n    switchMultiFunction:\n      id: 2\n      type: unknown\n    switchActions:\n      id: 16\n      type: enum8\n  cmd: null\n  cmdRsp: null\ngenLevelCtrl:\n  attrId:\n    currentLevel:\n      id: 0\n      type: uint8\n    remainingTime:\n      id: 1\n      type: uint16\n    onOffTransitionTime:\n      id: 16\n      type: uint16\n    onLevel:\n      id: 17\n      type: uint8\n    onTransitionTime:\n      id: 18\n      type: uint16\n    offTransitionTime:\n      id: 19\n      type: uint16\n    defaultMoveRate:\n      id: 20\n      type: uint16\n  cmd:\n    moveToLevel: 0\n    move: 1\n    step: 2\n    stop: 3\n    moveToLevelWithOnOff: 4\n    moveWithOnOff: 5\n    stepWithOnOff: 6\n    stopWithOnOff: 7\n  cmdRsp: null\ngenAlarms:\n  attrId:\n    alarmCount:\n      id: 0\n      type: uint16\n  cmd:\n    reset: 0\n    resetAll: 1\n    getAlarm: 2\n    resetLog: 3\n    publishEventLog: 4\n  cmdRsp:\n    alarm: 0\n    getRsp: 1\n    getEventLog: 2\ngenTime:\n  attrId:\n    time:\n      id: 0\n      type: utc\n    timeStatus:\n      id: 1\n      type: bitmap8\n    timeZone:\n      id: 2\n      type: int32\n    dstStart:\n      id: 3\n      type: uint32\n    dstEnd:\n      id: 4\n      type: uint32\n    dstShift:\n      id: 5\n      type: int32\n    standardTime:\n      id: 6\n      type: uint32\n    localTime:\n      id: 7\n      type: uint32\n    lastSetTime:\n      id: 8\n      type: utc\n    validUntilTime:\n      id: 9\n      type: utc\n  cmd: null\n  cmdRsp: null\ngenRssiLocation:\n  attrId:\n    type:\n      id: 0\n      type: data8\n    method:\n      id: 1\n      type: enum8\n    age:\n      id: 2\n      type: uint16\n    qualityMeasure:\n      id: 3\n      type: uint8\n    numOfDevices:\n      id: 4\n      type: uint8\n    coordinate1:\n      id: 16\n      type: int16\n    coordinate2:\n      id: 17\n      type: int16\n    coordinate3:\n      id: 18\n      type: int16\n    power:\n      id: 19\n      type: int16\n    pathLossExponent:\n      id: 20\n      type: uint16\n    reportingPeriod:\n      id: 21\n      type: uint16\n    calcPeriod:\n      id: 22\n      type: uint16\n    numRSSIMeasurements:\n      id: 23\n      type: uint16\n  cmd:\n    setAbsolute: 0\n    setDevCfg: 1\n    getDevCfg: 2\n    getData: 3\n  cmdRsp:\n    devCfgRsp: 0\n    dataRsp: 1\n    dataNotif: 2\n    compactDataNotif: 3\n    rssiPing: 4\ngenAnalogInput:\n  attrId:\n    description:\n      id: 28\n      type: charStr\n    maxPresentValue:\n      id: 65\n      type: singlePrec\n    minPresentValue:\n      id: 69\n      type: singlePrec\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: singlePrec\n    reliability:\n      id: 103\n      type: enum8\n    resolution:\n      id: 106\n      type: singlePrec\n    statusFlags:\n      id: 111\n      type: bitmap8\n    engineeringUnits:\n      id: 117\n      type: enum16\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenAnalogOutput:\n  attrId:\n    description:\n      id: 28\n      type: charStr\n    maxPresentValue:\n      id: 65\n      type: singlePrec\n    minPresentValue:\n      id: 69\n      type: singlePrec\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: singlePrec\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: singlePrec\n    resolution:\n      id: 106\n      type: singlePrec\n    statusFlags:\n      id: 111\n      type: bitmap8\n    engineeringUnits:\n      id: 117\n      type: enum16\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenAnalogValue:\n  attrId:\n    description:\n      id: 28\n      type: charStr\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: singlePrec\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: singlePrec\n    statusFlags:\n      id: 111\n      type: bitmap8\n    engineeringUnits:\n      id: 117\n      type: enum16\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenBinaryInput:\n  attrId:\n    activeText:\n      id: 4\n      type: charStr\n    description:\n      id: 28\n      type: charStr\n    inactiveText:\n      id: 46\n      type: charStr\n    outOfService:\n      id: 81\n      type: boolean\n    polarity:\n      id: 84\n      type: enum8\n    presentValue:\n      id: 85\n      type: boolean\n    reliability:\n      id: 103\n      type: enum8\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenBinaryOutput:\n  attrId:\n    activeText:\n      id: 4\n      type: charStr\n    description:\n      id: 28\n      type: charStr\n    inactiveText:\n      id: 46\n      type: charStr\n    minimumOffTime:\n      id: 66\n      type: uint32\n    minimumOnTime:\n      id: 67\n      type: uint32\n    outOfService:\n      id: 81\n      type: boolean\n    polarity:\n      id: 84\n      type: enum8\n    presentValue:\n      id: 85\n      type: boolean\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: boolean\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenBinaryValue:\n  attrId:\n    activeText:\n      id: 4\n      type: charStr\n    description:\n      id: 28\n      type: charStr\n    inactiveText:\n      id: 46\n      type: charStr\n    minimumOffTime:\n      id: 66\n      type: uint32\n    minimumOnTime:\n      id: 67\n      type: uint32\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: boolean\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: boolean\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenMultistateInput:\n  attrId:\n    stateText:\n      id: 14\n      type: array\n    description:\n      id: 28\n      type: charStr\n    numberOfStates:\n      id: 74\n      type: uint16\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: uint16\n    reliability:\n      id: 103\n      type: enum8\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenMultistateOutput:\n  attrId:\n    stateText:\n      id: 14\n      type: array\n    description:\n      id: 28\n      type: charStr\n    numberOfStates:\n      id: 74\n      type: uint16\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: uint16\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: uint16\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenMultistateValue:\n  attrId:\n    stateText:\n      id: 14\n      type: array\n    description:\n      id: 28\n      type: charStr\n    numberOfStates:\n      id: 74\n      type: uint16\n    outOfService:\n      id: 81\n      type: boolean\n    presentValue:\n      id: 85\n      type: uint16\n    priorityArray:\n      id: 87\n      type: array\n    reliability:\n      id: 103\n      type: enum8\n    relinquishDefault:\n      id: 104\n      type: uint16\n    statusFlags:\n      id: 111\n      type: bitmap8\n    applicationType:\n      id: 256\n      type: uint32\n  cmd: null\n  cmdRsp: null\ngenCommissioning:\n  attrId:\n    shortress:\n      id: 0\n      type: uint16\n    extendedPANId:\n      id: 1\n      type: ieeeAddr\n    panId:\n      id: 2\n      type: uint16\n    channelmask:\n      id: 3\n      type: bitmap32\n    protocolVersion:\n      id: 4\n      type: uint8\n    stackProfile:\n      id: 5\n      type: uint8\n    startupControl:\n      id: 6\n      type: enum8\n    trustCenterress:\n      id: 16\n      type: ieeeAddr\n    trustCenterMasterKey:\n      id: 17\n      type: secKey\n    networkKey:\n      id: 18\n      type: secKey\n    useInsecureJoin:\n      id: 19\n      type: boolean\n    preconfiguredLinkKey:\n      id: 20\n      type: secKey\n    networkKeySeqNum:\n      id: 21\n      type: uint8\n    networkKeyType:\n      id: 22\n      type: enum8\n    networkManagerress:\n      id: 23\n      type: uint16\n    scanAttempts:\n      id: 32\n      type: uint8\n    timeBetweenScans:\n      id: 33\n      type: uint16\n    rejoinInterval:\n      id: 34\n      type: uint16\n    maxRejoinInterval:\n      id: 35\n      type: uint16\n    indirectPollRate:\n      id: 48\n      type: uint16\n    parentRetryThreshold:\n      id: 49\n      type: uint8\n    concentratorFlag:\n      id: 64\n      type: boolean\n    concentratorRus:\n      id: 65\n      type: uint8\n    concentratorDiscoveryTime:\n      id: 66\n      type: uint8\n  cmd:\n    restartDevice: 0\n    saveStartupParams: 1\n    restoreStartupParams: 2\n    resetStartupParams: 3\n  cmdRsp:\n    restartDeviceRsp: 0\n    saveStartupParamsRsp: 1\n    restoreStartupParamsRsp: 2\n    resetStartupParamsRsp: 3\ngenOta:\n  attrId:\n    upgradeServerId:\n      id: 0\n      type: ieeeAddr\n    fileOffset:\n      id: 1\n      type: uint32\n    currentFileVersion:\n      id: 2\n      type: uint32\n    currentZigbeeStackVersion:\n      id: 3\n      type: uint16\n    downloadedFileVersion:\n      id: 4\n      type: uint32\n    downloadedZigbeeStackVersion:\n      id: 5\n      type: uint16\n    imageUpgradeStatus:\n      id: 6\n      type: enum8\n    manufacturerId:\n      id: 7\n      type: uint16\n    imageTypeId:\n      id: 8\n      type: uint16\n    minimumBlockReqDelay:\n      id: 9\n      type: uint16\n    imageStamp:\n      id: 10\n      type: uint32\n  cmd:\n    imageNotify: 0\n    queryNextImageReq: 1\n    queryNextImageRsp: 2\n    imageBlockReq: 3\n    imagePageReq: 4\n    imageBlockRsp: 5\n    upgradeEndReq: 6\n    upgradeEndRsp: 7\n    querySpecificFileReq: 8\n    querySpecificFileRsp: 9\n  cmdRsp:\n    imageNotify: 0\n    queryNextImageReq: 1\n    queryNextImageRsp: 2\n    imageBlockReq: 3\n    imagePageReq: 4\n    imageBlockRsp: 5\n    upgradeEndReq: 6\n    upgradeEndRsp: 7\n    querySpecificFileReq: 8\n    querySpecificFileRsp: 9\ngenPollCtrl:\n  attrId:\n    checkinInterval:\n      id: 0\n      type: uint32\n    longPollInterval:\n      id: 1\n      type: uint32\n    shortPollInterval:\n      id: 2\n      type: uint16\n    fastPollTimeout:\n      id: 3\n      type: uint16\n    checkinIntervalMin:\n      id: 4\n      type: uint32\n    longPollIntervalMin:\n      id: 5\n      type: uint32\n    fastPollTimeoutMax:\n      id: 6\n      type: uint16\n    physicalClosedLimit:\n      id: 0\n      type: uint16\n  cmd:\n    checkinRsp: 0\n    fastPollStop: 1\n    setLongPollInterval: 2\n    setShortPollInterval: 3\n  cmdRsp:\n    checkin: 0\nmobileDeviceCfg:\n  attrId:\n    keepAliveTime:\n      id: 0\n      type: uint16\n    rejoinTimeout:\n      id: 1\n      type: uint16\n  cmd: null\n  cmdRsp:\n    keepAliveNotification: 0\nneighborCleaning:\n  attrId:\n    neighborCleaningTimeout:\n      id: 0\n      type: uint16\n  cmd:\n    purgeEntries: 0\n  cmdRsp: null\nnearestGateway:\n  attrId:\n    nearestGateway:\n      id: 0\n      type: uint16\n    newMobileNode:\n      id: 1\n      type: uint16\n  cmd: null\n  cmdRsp: null\nclosuresShadeCfg:\n  attrId:\n    physicalClosedLimit:\n      id: 0\n      type: uint16\n    motorStepSize:\n      id: 1\n      type: uint8\n    status:\n      id: 2\n      type: bitmap8\n    losedLimit:\n      id: 16\n      type: uint16\n    mode:\n      id: 18\n      type: enum8\n  cmd: null\n  cmdRsp: null\nclosuresDoorLock:\n  attrId:\n    lockState:\n      id: 0\n      type: enum8\n    lockType:\n      id: 38\n      type: bitmap16\n    actuatorEnabled:\n      id: 2\n      type: boolean\n    doorState:\n      id: 3\n      type: enum8\n    doorOpenEvents:\n      id: 4\n      type: uint32\n    doorClosedEvents:\n      id: 5\n      type: uint32\n    openPeriod:\n      id: 6\n      type: uint16\n    numOfLockRecordsSupported:\n      id: 16\n      type: uint16\n    numOfTotalUsersSupported:\n      id: 17\n      type: uint16\n    numOfPinUsersSupported:\n      id: 18\n      type: uint16\n    numOfRfidUsersSupported:\n      id: 19\n      type: uint16\n    numOfWeekDaySchedulesSupportedPerUser:\n      id: 20\n      type: uint8\n    numOfYearDaySchedulesSupportedPerUser:\n      id: 21\n      type: uint8\n    numOfHolidayScheduledsSupported:\n      id: 22\n      type: uint8\n    maxPinLen:\n      id: 23\n      type: uint8\n    minPinLen:\n      id: 24\n      type: uint8\n    maxRfidLen:\n      id: 25\n      type: uint8\n    minRfidLen:\n      id: 26\n      type: uint8\n    enable_Logging:\n      id: 32\n      type: boolean\n    language:\n      id: 33\n      type: charStr\n    ledSettings:\n      id: 34\n      type: uint8\n    autoRelockTime:\n      id: 35\n      type: uint32\n    soundVolume:\n      id: 36\n      type: uint8\n    operatingMode:\n      id: 37\n      type: uint32\n    defaultConfigurationRegister:\n      id: 39\n      type: bitmap16\n    enableLocalProgramming:\n      id: 40\n      type: boolean\n    enableOneTouchLocking:\n      id: 41\n      type: boolean\n    enableInsideStatusLed:\n      id: 42\n      type: boolean\n    enablePrivacyModeButton:\n      id: 43\n      type: boolean\n    wrongCodeEntryLimit:\n      id: 48\n      type: uint8\n    userCodeTemporaryDisableTime:\n      id: 49\n      type: uint8\n    sendPinOta:\n      id: 50\n      type: boolean\n    requirePinForRfOperation:\n      id: 51\n      type: boolean\n    zigbeeSecurityLevel:\n      id: 52\n      type: uint8\n    alarmMask:\n      id: 64\n      type: bitmap16\n    keypadOperationEventMask:\n      id: 65\n      type: bitmap16\n    rfOperationEventMask:\n      id: 66\n      type: bitmap16\n    manualOperationEventMask:\n      id: 67\n      type: bitmap16\n    rfidOperationEventMask:\n      id: 68\n      type: bitmap16\n    keypadProgrammingEventMask:\n      id: 69\n      type: bitmap16\n    rfProgrammingEventMask:\n      id: 70\n      type: bitmap16\n    rfidProgrammingEventMask:\n      id: 71\n      type: bitmap16\n  cmd:\n    lockDoor: 0\n    unlockDoor: 1\n    toggleDoor: 2\n    unlockWithTimeout: 3\n    getLogRecord: 4\n    setPinCode: 5\n    getPinCode: 6\n    clearPinCode: 7\n    clearAllPinCodes: 8\n    setUserStatus: 9\n    getUserStatus: 10\n    setWeekDaySchedule: 11\n    getWeekDaySchedule: 12\n    clearWeekDaySchedule: 13\n    setYearDaySchedule: 14\n    getYearDaySchedule: 15\n    clearYearDaySchedule: 16\n    setHolidaySchedule: 17\n    getHolidaySchedule: 18\n    clearHolidaySchedule: 19\n    setUserType: 20\n    getUserType: 21\n    setRfidCode: 22\n    getRfidCode: 23\n    clearRfidCode: 24\n    clearAllRfidCodes: 25\n  cmdRsp:\n    lockDoorRsp: 0\n    unlockDoorRsp: 1\n    toggleDoorRsp: 2\n    unlockWithTimeoutRsp: 3\n    getLogRecordRsp: 4\n    setPinCodeRsp: 5\n    getPinCodeRsp: 6\n    clearPinCodeRsp: 7\n    clearAllPinCodesRsp: 8\n    setUserStatusRsp: 9\n    getUserStatusRsp: 10\n    setWeekDayScheduleRsp: 11\n    getWeekDayScheduleRsp: 12\n    clearWeekDayScheduleRsp: 13\n    setYearDayScheduleRsp: 14\n    getYearDayScheduleRsp: 15\n    clearYearDayScheduleRsp: 16\n    setHolidayScheduleRsp: 17\n    getHolidayScheduleRsp: 18\n    clearHolidayScheduleRsp: 19\n    setUserTypeRsp: 20\n    getUserTypeRsp: 21\n    setRfidCodeRsp: 22\n    getRfidCodeRsp: 23\n    clearRfidCodeRsp: 24\n    clearAllRfidCodesRsp: 25\n    operationEventNotification: 32\n    programmingEventNotification: 33\nclosuresWindowCovering:\n  attrId:\n    windowCoveringType:\n      id: 0\n      type: enum8\n    physicalCloseLimitLiftCm:\n      id: 1\n      type: uint16\n    physicalCloseLimitTiltDdegree:\n      id: 2\n      type: uint16\n    currentPositionLiftCm:\n      id: 3\n      type: uint16\n    currentPositionTiltDdegree:\n      id: 4\n      type: uint16\n    numOfActuationLift:\n      id: 5\n      type: uint16\n    numOfActuationTilt:\n      id: 22\n      type: uint16\n    configStatus:\n      id: 7\n      type: bitmap8\n    currentPositionLiftPercentage:\n      id: 8\n      type: uint8\n    currentPositionTiltPercentage:\n      id: 9\n      type: uint8\n    installedOpenLimitLiftCm:\n      id: 16\n      type: uint16\n    installedClosedLimitLiftCm:\n      id: 17\n      type: uint16\n    installedOpenLimitTiltDdegree:\n      id: 18\n      type: uint16\n    installedClosedLimitTiltDdegree:\n      id: 16\n      type: uint16\n    velocityLift:\n      id: 18\n      type: uint16\n    accelerationTimeLift:\n      id: 21\n      type: uint16\n    windowCoveringMode:\n      id: 23\n      type: bitmap8\n    intermediateSetpointsLift:\n      id: 24\n      type: octetStr\n    intermediateSetpointsTilt:\n      id: 25\n      type: octetStr\n  cmd:\n    upOpen: 0\n    downClose: 1\n    stop: 2\n    goToLiftValue: 4\n    goToLiftPercentage: 5\n    goToTiltValue: 7\n    goToTiltPercentage: 8\n  cmdRsp: null\nhvacPumpCfgCtrl:\n  attrId:\n    maxPressure:\n      id: 0\n      type: int16\n    maxSpeed:\n      id: 1\n      type: uint16\n    maxFlow:\n      id: 2\n      type: uint16\n    minConstPressure:\n      id: 3\n      type: int16\n    maxConstPressure:\n      id: 4\n      type: int16\n    minCompPressure:\n      id: 5\n      type: int16\n    maxCompPressure:\n      id: 6\n      type: int16\n    minConstSpeed:\n      id: 7\n      type: uint16\n    maxConstSpeed:\n      id: 8\n      type: uint16\n    minConstFlow:\n      id: 9\n      type: uint16\n    maxConstFlow:\n      id: 10\n      type: uint16\n    minConstTemp:\n      id: 11\n      type: int16\n    maxConstTemp:\n      id: 12\n      type: int16\n    pumpStatus:\n      id: 16\n      type: bitmap16\n    effectiveOperationMode:\n      id: 17\n      type: enum8\n    effectiveControlMode:\n      id: 18\n      type: enum8\n    capacity:\n      id: 19\n      type: int16\n    speed:\n      id: 20\n      type: uint16\n    lifetimeRunningHours:\n      id: 21\n      type: uint24\n    power:\n      id: 22\n      type: uint24\n    lifetimeEnergyConsumed:\n      id: 23\n      type: uint32\n    operationMode:\n      id: 32\n      type: enum8\n    controlMode:\n      id: 33\n      type: enum8\n    alarmMask:\n      id: 34\n      type: bitmap16\n  cmd: null\n  cmdRsp: null\nhvacThermostat:\n  attrId:\n    localTemp:\n      id: 0\n      type: int16\n    outdoorTemp:\n      id: 1\n      type: int16\n    ocupancy:\n      id: 2\n      type: bitmap8\n    absMinHeatSetpointLimit:\n      id: 3\n      type: int16\n    absMaxHeatSetpointLimit:\n      id: 4\n      type: int16\n    absMinCoolSetpointLimit:\n      id: 5\n      type: int16\n    absMaxCoolSetpointLimit:\n      id: 6\n      type: int16\n    pICoolingDemand:\n      id: 7\n      type: uint8\n    pIHeatingDemand:\n      id: 8\n      type: uint8\n    systemTypeConfig:\n      id: 9\n      type: bitmap8\n    localTemperatureCalibration:\n      id: 16\n      type: int8\n    occupiedCoolingSetpoint:\n      id: 17\n      type: int16\n    occupiedHeatingSetpoint:\n      id: 18\n      type: int16\n    unoccupiedCoolingSetpoint:\n      id: 19\n      type: int16\n    unoccupiedHeatingSetpoint:\n      id: 20\n      type: int16\n    minHeatSetpointLimit:\n      id: 21\n      type: int16\n    maxHeatSetpointLimit:\n      id: 22\n      type: int16\n    minCoolSetpointLimit:\n      id: 23\n      type: int16\n    maxCoolSetpointLimit:\n      id: 24\n      type: int16\n    minSetpointDeadBand:\n      id: 25\n      type: int8\n    remoteSensing:\n      id: 26\n      type: bitmap8\n    ctrlSeqeOfOper:\n      id: 27\n      type: enum8\n    systemMode:\n      id: 28\n      type: enum8\n    alarmMask:\n      id: 29\n      type: bitmap8\n    runningMode:\n      id: 30\n      type: enum8\n    startOfWeek:\n      id: 32\n      type: enum8\n    numberOfWeeklyTrans:\n      id: 33\n      type: uint8\n    numberOfDailyTrans:\n      id: 34\n      type: uint8\n    tempSetpointHold:\n      id: 35\n      type: enum8\n    tempSetpointHoldDuration:\n      id: 36\n      type: uint16\n    programingOperMode:\n      id: 37\n      type: bitmap8\n    runningState:\n      id: 41\n      type: bitmap16\n    setpointChangeSource:\n      id: 48\n      type: enum8\n    setpointChangeAmount:\n      id: 49\n      type: int16\n    setpointChangeSourceTimeStamp:\n      id: 50\n      type: utc\n    acType:\n      id: 64\n      type: enum8\n    acCapacity:\n      id: 65\n      type: uint16\n    acRefrigerantType:\n      id: 66\n      type: enum8\n    acConpressorType:\n      id: 67\n      type: enum8\n    acErrorCode:\n      id: 68\n      type: bitmap32\n    acLouverPosition:\n      id: 69\n      type: enum8\n    acCollTemp:\n      id: 70\n      type: int16\n    acCapacityFormat:\n      id: 71\n      type: enum8\n  cmd:\n    setpointRaiseLower: 0\n    setWeeklySchedule: 1\n    getWeeklySchedule: 2\n    clearWeeklySchedule: 3\n    getRelayStatusLog: 4\n  cmdRsp:\n    getWeeklyScheduleRsp: 0\n    getRelayStatusLogRsp: 1\nhvacFanCtrl:\n  attrId:\n    fanMode:\n      id: 0\n      type: enum8\n    fanModeSequence:\n      id: 1\n      type: enum8\n  cmd: null\n  cmdRsp: null\nhvacDehumidificationCtrl:\n  attrId:\n    relativeHumidity:\n      id: 0\n      type: uint8\n    dehumidCooling:\n      id: 1\n      type: uint8\n    rhDehumidSetpoint:\n      id: 16\n      type: uint8\n    relativeHumidityMode:\n      id: 17\n      type: enum8\n    dehumidLockout:\n      id: 18\n      type: enum8\n    dehumidHysteresis:\n      id: 19\n      type: uint8\n    dehumidMaxCool:\n      id: 20\n      type: uint8\n    relativeHumidDisplay:\n      id: 21\n      type: enum8\n  cmd: null\n  cmdRsp: null\nhvacUserInterfaceCfg:\n  attrId:\n    tempDisplayMode:\n      id: 0\n      type: enum8\n    keypadLockout:\n      id: 1\n      type: enum8\n    programmingVisibility:\n      id: 2\n      type: enum8\n  cmd: null\n  cmdRsp: null\nlightingColorCtrl:\n  attrId:\n    currentHue:\n      id: 0\n      type: uint8\n    currentSaturation:\n      id: 1\n      type: uint8\n    remainingTime:\n      id: 2\n      type: uint16\n    currentX:\n      id: 3\n      type: uint16\n    currentY:\n      id: 4\n      type: uint16\n    driftCompensation:\n      id: 5\n      type: enum8\n    compensationText:\n      id: 6\n      type: charStr\n    colorTemperature:\n      id: 7\n      type: uint16\n    colorMode:\n      id: 8\n      type: enum8\n    numPrimaries:\n      id: 16\n      type: uint8\n    primary1X:\n      id: 17\n      type: uint16\n    primary1Y:\n      id: 18\n      type: uint16\n    primary1Intensity:\n      id: 19\n      type: uint8\n    primary2X:\n      id: 21\n      type: uint16\n    primary2Y:\n      id: 22\n      type: uint16\n    primary2Intensity:\n      id: 23\n      type: uint8\n    primary3X:\n      id: 25\n      type: uint16\n    primary3Y:\n      id: 26\n      type: uint16\n    primary3Intensity:\n      id: 27\n      type: uint8\n    primary4X:\n      id: 32\n      type: uint16\n    primary4Y:\n      id: 33\n      type: uint16\n    primary4Intensity:\n      id: 34\n      type: uint8\n    primary5X:\n      id: 36\n      type: uint16\n    primary5Y:\n      id: 37\n      type: uint16\n    primary5Intensity:\n      id: 38\n      type: uint8\n    primary6X:\n      id: 40\n      type: uint16\n    primary6Y:\n      id: 41\n      type: uint16\n    primary6Intensity:\n      id: 42\n      type: uint8\n    whitePointX:\n      id: 48\n      type: uint16\n    whitePointY:\n      id: 49\n      type: uint16\n    colorPointRX:\n      id: 50\n      type: uint16\n    colorPointRY:\n      id: 51\n      type: uint16\n    colorPointRIntensity:\n      id: 52\n      type: uint8\n    colorPointGX:\n      id: 54\n      type: uint16\n    colorPointGY:\n      id: 55\n      type: uint16\n    colorPointGIntensity:\n      id: 56\n      type: uint8\n    colorPointBX:\n      id: 58\n      type: uint16\n    colorPointBY:\n      id: 59\n      type: uint16\n    colorPointBIntensity:\n      id: 60\n      type: uint8\n    enhancedCurrentHue:\n      id: 16384\n      type: uint16\n    enhancedColorMode:\n      id: 16385\n      type: enum8\n    colorLoopActive:\n      id: 16386\n      type: uint8\n    colorLoopDirection:\n      id: 16387\n      type: uint8\n    colorLoopTime:\n      id: 16388\n      type: uint16\n    colorLoopStartEnhancedHue:\n      id: 16389\n      type: uint16\n    colorLoopStoredEnhancedHue:\n      id: 16390\n      type: uint16\n    colorCapabilities:\n      id: 16394\n      type: uint16\n    colorTempPhysicalMin:\n      id: 16395\n      type: uint16\n    colorTempPhysicalMax:\n      id: 16396\n      type: uint16\n  cmd:\n    moveToHue: 0\n    moveHue: 1\n    stepHue: 2\n    moveToSaturation: 3\n    moveSaturation: 4\n    stepSaturation: 5\n    moveToHueAndSaturation: 6\n    moveToColor: 7\n    moveColor: 8\n    stepColor: 9\n    moveToColorTemp: 10\n    enhancedMoveToHue: 64\n    enhancedMoveHue: 65\n    enhancedStepHue: 66\n    enhancedMoveToHueAndSaturation: 67\n    colorLoopSet: 68\n    stopMoveStep: 71\n  cmdRsp: null\nlightingBallastCfg:\n  attrId:\n    physicalMinLevel:\n      id: 0\n      type: uint8\n    physicalMaxLevel:\n      id: 1\n      type: uint8\n    ballastStatus:\n      id: 2\n      type: bitmap8\n    minLevel:\n      id: 16\n      type: uint8\n    maxLevel:\n      id: 17\n      type: uint8\n    powerOnLevel:\n      id: 18\n      type: uint8\n    powerOnFadeTime:\n      id: 19\n      type: uint16\n    intrinsicBallastFactor:\n      id: 20\n      type: uint8\n    ballastFactorAdjustment:\n      id: 21\n      type: uint8\n    lampQuantity:\n      id: 32\n      type: uint8\n    lampType:\n      id: 48\n      type: charStr\n    lampManufacturer:\n      id: 49\n      type: charStr\n    lampRatedHours:\n      id: 50\n      type: uint24\n    lampBurnHours:\n      id: 51\n      type: uint24\n    lampAlarmMode:\n      id: 52\n      type: bitmap8\n    lampBurnHoursTripPoint:\n      id: 53\n      type: uint24\n  cmd: null\n  cmdRsp: null\nmsIlluminanceMeasurement:\n  attrId:\n    measuredValue:\n      id: 0\n      type: uint16\n    minMeasuredValue:\n      id: 1\n      type: uint16\n    maxMeasuredValue:\n      id: 2\n      type: uint16\n    tolerance:\n      id: 3\n      type: uint16\n    lightSensorType:\n      id: 4\n      type: enum8\n  cmd: null\n  cmdRsp: null\nmsIlluminanceLevelSensing:\n  attrId:\n    levelStatus:\n      id: 0\n      type: enum8\n    lightSensorType:\n      id: 1\n      type: enum8\n    illuminanceTargetLevel:\n      id: 16\n      type: uint16\n  cmd: null\n  cmdRsp: null\nmsTemperatureMeasurement:\n  attrId:\n    measuredValue:\n      id: 0\n      type: int16\n    minMeasuredValue:\n      id: 1\n      type: int16\n    maxMeasuredValue:\n      id: 2\n      type: int16\n    tolerance:\n      id: 3\n      type: uint16\n    minPercentChange:\n      id: 16\n      type: unknown\n    minAbsoluteChange:\n      id: 17\n      type: unknown\n  cmd: null\n  cmdRsp: null\nmsPressureMeasurement:\n  attrId:\n    measuredValue:\n      id: 0\n      type: int16\n    minMeasuredValue:\n      id: 1\n      type: int16\n    maxMeasuredValue:\n      id: 2\n      type: int16\n    tolerance:\n      id: 3\n      type: uint16\n  cmd: null\n  cmdRsp: null\nmsFlowMeasurement:\n  attrId:\n    measuredValue:\n      id: 0\n      type: uint16\n    minMeasuredValue:\n      id: 1\n      type: uint16\n    maxMeasuredValue:\n      id: 2\n      type: uint16\n    tolerance:\n      id: 3\n      type: uint16\n  cmd: null\n  cmdRsp: null\nmsRelativeHumidity:\n  attrId:\n    measuredValue:\n      id: 0\n      type: uint16\n    minMeasuredValue:\n      id: 1\n      type: uint16\n    maxMeasuredValue:\n      id: 2\n      type: uint16\n    tolerance:\n      id: 3\n      type: uint16\n  cmd: null\n  cmdRsp: null\nmsOccupancySensing:\n  attrId:\n    occupancy:\n      id: 0\n      type: bitmap8\n    occupancySensorType:\n      id: 1\n      type: enum8\n    pirOToUDelay:\n      id: 16\n      type: uint16\n    pirUToODelay:\n      id: 17\n      type: uint16\n    pirUToOThreshold:\n      id: 18\n      type: uint8\n    ultrasonicOToUDelay:\n      id: 32\n      type: uint16\n    ultrasonicUToODelay:\n      id: 33\n      type: uint16\n    ultrasonicUToOThreshold:\n      id: 34\n      type: uint8\n  cmd: null\n  cmdRsp: null\nssIasZone:\n  attrId:\n    zoneState:\n      id: 0\n      type: enum8\n    zoneType:\n      id: 1\n      type: enum16\n    zoneStatus:\n      id: 2\n      type: bitmap16\n    iasCieAddr:\n      id: 16\n      type: ieeeAddr\n    zoneId:\n      id: 17\n      type: uint8\n    numZoneSensitivityLevelsSupported:\n      id: 18\n      type: uint8\n    currentZoneSensitivityLevel:\n      id: 19\n      type: uint8\n  cmd:\n    enrollRsp: 0\n    initNormalOpMode: 1\n    initTestMode: 2\n  cmdRsp:\n    statusChangeNotification: 0\n    enrollReq: 1\nssIasAce:\n  attrId: null\n  cmd:\n    arm: 0\n    bypass: 1\n    emergency: 2\n    fire: 3\n    panic: 4\n    getZoneIDMap: 5\n    getZoneInfo: 6\n    getPanelStatus: 7\n    getBypassedZoneList: 8\n    getZoneStatus: 9\n  cmdRsp:\n    armRsp: 0\n    getZoneIDMapRsp: 1\n    getZoneInfoRsp: 2\n    zoneStatusChanged: 3\n    panelStatusChanged: 4\n    getPanelStatusRsp: 5\n    setBypassedZoneList: 6\n    bypassRsp: 7\n    getZoneStatusRsp: 8\nssIasWd:\n  attrId:\n    maxDuration:\n      id: 0\n      type: uint16\n  cmd:\n    startWarning: 0\n    squawk: 1\n  cmdRsp: null\npiGenericTunnel:\n  attrId:\n    maxIncomeTransSize:\n      id: 1\n      type: uint16\n    maxOutgoTransSize:\n      id: 2\n      type: uint16\n    protocolAddr:\n      id: 3\n      type: octetStr\n  cmd:\n    matchProtocolAddr: 0\n  cmdRsp:\n    matchProtocolAddrRsp: 0\n    advertiseProtocolAddr: 1\npiBacnetProtocolTunnel:\n  attrId: null\n  cmd:\n    transferNpdu: 0\n  cmdRsp: null\npiAnalogInputReg:\n  attrId:\n    covIncrement:\n      id: 22\n      type: singlePrec\n    deviceType:\n      id: 31\n      type: charStr\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    updateInterval:\n      id: 118\n      type: uint8\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiAnalogInputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    notificationClass:\n      id: 17\n      type: uint16\n    deadband:\n      id: 25\n      type: singlePrec\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    highLimit:\n      id: 45\n      type: singlePrec\n    limitEnable:\n      id: 52\n      type: bitmap8\n    lowLimit:\n      id: 59\n      type: singlePrec\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd:\n    transferApdu: 0\n    connectReq: 1\n    disconnectReq: 2\n    connectStatusNoti: 3\n  cmdRsp: null\npiAnalogOutputReg:\n  attrId:\n    covIncrement:\n      id: 22\n      type: singlePrec\n    deviceType:\n      id: 31\n      type: charStr\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    updateInterval:\n      id: 118\n      type: uint8\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiAnalogOutputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    notificationClass:\n      id: 17\n      type: uint16\n    deadband:\n      id: 25\n      type: singlePrec\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    highLimit:\n      id: 45\n      type: singlePrec\n    limitEnable:\n      id: 52\n      type: bitmap8\n    lowLimit:\n      id: 59\n      type: singlePrec\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiAnalogValueReg:\n  attrId:\n    covIncrement:\n      id: 22\n      type: singlePrec\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiAnalogValueExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    notificationClass:\n      id: 17\n      type: uint16\n    deadband:\n      id: 25\n      type: singlePrec\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    highLimit:\n      id: 45\n      type: singlePrec\n    limitEnable:\n      id: 52\n      type: bitmap8\n    lowLimit:\n      id: 59\n      type: singlePrec\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiBinaryInputReg:\n  attrId:\n    changeOfStateCount:\n      id: 15\n      type: uint32\n    changeOfStateTime:\n      id: 16\n      type: struct\n    deviceType:\n      id: 31\n      type: charStr\n    elapsedActiveTime:\n      id: 33\n      type: uint32\n    objectIdentifier:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    timeOfATReset:\n      id: 114\n      type: struct\n    timeOfSCReset:\n      id: 115\n      type: struct\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiBinaryInputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    alarmValue:\n      id: 6\n      type: boolean\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiBinaryOutputReg:\n  attrId:\n    changeOfStateCount:\n      id: 15\n      type: uint32\n    changeOfStateTime:\n      id: 16\n      type: struct\n    deviceType:\n      id: 31\n      type: charStr\n    elapsedActiveTime:\n      id: 33\n      type: uint32\n    feedBackValue:\n      id: 40\n      type: enum8\n    objectIdentifier:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    timeOfATReset:\n      id: 114\n      type: struct\n    timeOfSCReset:\n      id: 115\n      type: struct\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiBinaryOutputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiBinaryValueReg:\n  attrId:\n    changeOfStateCount:\n      id: 15\n      type: uint32\n    changeOfStateTime:\n      id: 16\n      type: struct\n    elapsedActiveTime:\n      id: 33\n      type: uint32\n    objectIdentifier:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    timeOfATReset:\n      id: 114\n      type: struct\n    timeOfSCReset:\n      id: 115\n      type: struct\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiBinaryValueExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    alarmValue:\n      id: 6\n      type: boolean\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiMultistateInputReg:\n  attrId:\n    deviceType:\n      id: 31\n      type: charStr\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiMultistateInputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    alarmValue:\n      id: 6\n      type: uint16\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    faultValues:\n      id: 37\n      type: uint16\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiMultistateOutputReg:\n  attrId:\n    deviceType:\n      id: 31\n      type: charStr\n    feedBackValue:\n      id: 40\n      type: enum8\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiMultistateOutputExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npiMultistateValueReg:\n  attrId:\n    objectId:\n      id: 75\n      type: bacOid\n    objectName:\n      id: 77\n      type: charStr\n    objectType:\n      id: 79\n      type: enum16\n    profileName:\n      id: 168\n      type: charStr\n  cmd: null\n  cmdRsp: null\npiMultistateValueExt:\n  attrId:\n    ackedTransitions:\n      id: 0\n      type: bitmap8\n    alarmValue:\n      id: 6\n      type: uint16\n    notificationClass:\n      id: 17\n      type: uint16\n    eventEnable:\n      id: 35\n      type: bitmap8\n    eventState:\n      id: 36\n      type: enum8\n    faultValues:\n      id: 37\n      type: uint16\n    notifyType:\n      id: 72\n      type: enum8\n    timeDelay:\n      id: 113\n      type: uint8\n    eventTimeStamps:\n      id: 130\n      type: array\n  cmd: null\n  cmdRsp: null\npi11073ProtocolTunnel:\n  attrId:\n    deviceidList:\n      id: 0\n      type: array\n    managerTarget:\n      id: 1\n      type: ieeeAddr\n    managerEndpoint:\n      id: 2\n      type: uint8\n    connected:\n      id: 3\n      type: boolean\n    preemptible:\n      id: 4\n      type: boolean\n    idleTimeout:\n      id: 5\n      type: uint16\n  cmd:\n    transferApdu: 0\n    connectReq: 1\n    disconnectReq: 2\n    connectStatusNoti: 3\n  cmdRsp: null\npiIso7818ProtocolTunnel:\n  attrId:\n    status:\n      id: 0\n      type: uint8\n  cmd:\n    transferApdu: 0\n    insertSmartCard: 1\n    extractSmartCard: 2\n  cmdRsp:\n    transferApdu: 0\npiRetailTunnel:\n  attrId:\n    manufacturerCode:\n      id: 0\n      type: uint16\n    msProfile:\n      id: 1\n      type: uint16\n  cmd:\n    transferApdu: 0\n  cmdRsp: null\nseMetering:\n  attrId:\n    currentSummDelivered:\n      id: 0\n      type: uint48\n    currentSummReceived:\n      id: 1\n      type: uint48\n    currentMaxDemandDelivered:\n      id: 2\n      type: uint48\n    currentMaxDemandReceived:\n      id: 3\n      type: uint48\n    dftSumm:\n      id: 4\n      type: uint48\n    dailyFreezeTime:\n      id: 5\n      type: uint16\n    powerFactor:\n      id: 6\n      type: int8\n    readingSnapshotTime:\n      id: 7\n      type: utc\n    currentMaxDemandDeliverdTime:\n      id: 8\n      type: utc\n    currentMaxDemandReceivedTime:\n      id: 9\n      type: utc\n    defaultUpdatePeriod:\n      id: 10\n      type: uint8\n    fastPollUpdatePeriod:\n      id: 11\n      type: uint8\n    currentBlockPeriodConsumpDelivered:\n      id: 12\n      type: uint48\n    dailyConsumpTarget:\n      id: 13\n      type: uint24\n    currentBlock:\n      id: 14\n      type: enum8\n    profileIntervalPeriod:\n      id: 15\n      type: enum8\n    intervalReadReportingPeriod:\n      id: 16\n      type: uint16\n    presetReadingTime:\n      id: 17\n      type: uint16\n    volumePerReport:\n      id: 18\n      type: uint16\n    flowRestriction:\n      id: 19\n      type: uint8\n    supplyStatus:\n      id: 20\n      type: enum8\n    currentInEnergyCarrierSumm:\n      id: 21\n      type: uint48\n    currentOutEnergyCarrierSumm:\n      id: 22\n      type: uint48\n    inletTempreature:\n      id: 23\n      type: int24\n    outletTempreature:\n      id: 24\n      type: int24\n    controlTempreature:\n      id: 25\n      type: int24\n    currentInEnergyCarrierDemand:\n      id: 26\n      type: int24\n    currentOutEnergyCarrierDemand:\n      id: 27\n      type: int24\n    currentBlockPeriodConsumpReceived:\n      id: 29\n      type: uint48\n    currentBlockReceived:\n      id: 30\n      type: uint48\n    currentTier1SummDelivered:\n      id: 256\n      type: uint48\n    currentTier1SummReceived:\n      id: 257\n      type: uint48\n    currentTier2SummDelivered:\n      id: 258\n      type: uint48\n    currentTier2SummReceived:\n      id: 259\n      type: uint48\n    currentTier3SummDelivered:\n      id: 260\n      type: uint48\n    currentTier3SummReceived:\n      id: 261\n      type: uint48\n    currentTier4SummDelivered:\n      id: 262\n      type: uint48\n    currentTier4SummReceived:\n      id: 263\n      type: uint48\n    currentTier5SummDelivered:\n      id: 264\n      type: uint48\n    currentTier5SummReceived:\n      id: 265\n      type: uint48\n    currentTier6SummDelivered:\n      id: 266\n      type: uint48\n    currentTier6SummReceived:\n      id: 267\n      type: uint48\n    currentTier7SummDelivered:\n      id: 268\n      type: uint48\n    currentTier7SummReceived:\n      id: 269\n      type: uint48\n    currentTier8SummDelivered:\n      id: 270\n      type: uint48\n    currentTier8SummReceived:\n      id: 271\n      type: uint48\n    currentTier9SummDelivered:\n      id: 272\n      type: uint48\n    currentTier9SummReceived:\n      id: 273\n      type: uint48\n    currentTier10SummDelivered:\n      id: 274\n      type: uint48\n    currentTier10SummReceived:\n      id: 275\n      type: uint48\n    currentTier11SummDelivered:\n      id: 276\n      type: uint48\n    currentTier11SummReceived:\n      id: 277\n      type: uint48\n    currentTier12SummDelivered:\n      id: 278\n      type: uint48\n    currentTier12SummReceived:\n      id: 279\n      type: uint48\n    currentTier13SummDelivered:\n      id: 280\n      type: uint48\n    currentTier13SummReceived:\n      id: 281\n      type: uint48\n    currentTier14SummDelivered:\n      id: 282\n      type: uint48\n    currentTier14SummReceived:\n      id: 283\n      type: uint48\n    currentTier15SummDelivered:\n      id: 284\n      type: uint48\n    currentTier15SummReceived:\n      id: 285\n      type: uint48\n    status:\n      id: 512\n      type: bitmap8\n    remainingBattLife:\n      id: 513\n      type: uint8\n    hoursInOperation:\n      id: 514\n      type: uint24\n    hoursInFault:\n      id: 515\n      type: uint24\n    extendedStatus:\n      id: 516\n      type: bitmap64\n    unitOfMeasure:\n      id: 768\n      type: enum8\n    multiplier:\n      id: 769\n      type: uint24\n    divisor:\n      id: 770\n      type: uint24\n    summaFormatting:\n      id: 771\n      type: bitmap8\n    demandFormatting:\n      id: 772\n      type: bitmap8\n    historicalConsumpFormatting:\n      id: 773\n      type: bitmap8\n    meteringDeviceType:\n      id: 774\n      type: bitmap8\n    siteId:\n      id: 775\n      type: octetStr\n    meterSerialNumber:\n      id: 776\n      type: octetStr\n    energyCarrierUnitOfMeas:\n      id: 777\n      type: enum8\n    energyCarrierSummFormatting:\n      id: 778\n      type: bitmap8\n    energyCarrierDemandFormatting:\n      id: 779\n      type: bitmap8\n    temperatureUnitOfMeas:\n      id: 780\n      type: enum8\n    temperatureFormatting:\n      id: 781\n      type: bitmap8\n    moduleSerialNumber:\n      id: 782\n      type: octetStr\n    operatingTariffLevel:\n      id: 783\n      type: octetStr\n    instantaneousDemand:\n      id: 1024\n      type: int24\n    currentdayConsumpDelivered:\n      id: 1025\n      type: uint24\n    currentdayConsumpReceived:\n      id: 1026\n      type: uint24\n    previousdayConsumpDelivered:\n      id: 1027\n      type: uint24\n    previousdayConsumpReceived:\n      id: 1028\n      type: uint24\n    curPartProfileIntStartTimeDelivered:\n      id: 1029\n      type: utc\n    curPartProfileIntStartTime_Received:\n      id: 1030\n      type: utc\n    curPartProfileIntValueDelivered:\n      id: 1031\n      type: uint24\n    curPartProfileIntValueReceived:\n      id: 1032\n      type: uint24\n    currentDayMaxPressure:\n      id: 1033\n      type: uint48\n    currentDayMinPressure:\n      id: 1034\n      type: uint48\n    previousDayMaxPressure:\n      id: 1035\n      type: uint48\n    previousDayMinPressure:\n      id: 1036\n      type: uint48\n    currentDayMaxDemand:\n      id: 1037\n      type: int24\n    previousDayMaxDemand:\n      id: 1038\n      type: int24\n    currentMonthMaxDemand:\n      id: 1039\n      type: int24\n    currentYearMaxDemand:\n      id: 1040\n      type: int24\n    currentdayMaxEnergyCarrDemand:\n      id: 1041\n      type: int24\n    previousdayMaxEnergyCarrDemand:\n      id: 1042\n      type: int24\n    curMonthMaxEnergyCarrDemand:\n      id: 1043\n      type: int24\n    curMonthMinEnergyCarrDemand:\n      id: 1044\n      type: int24\n    curYearMaxEnergyCarrDemand:\n      id: 1045\n      type: int24\n    curYearMinEnergyCarrDemand:\n      id: 1046\n      type: int24\n    maxNumberOfPeriodsDelivered:\n      id: 1280\n      type: uint8\n    current_Demand_Delivered:\n      id: 1536\n      type: uint24\n    demandLimit:\n      id: 1537\n      type: uint24\n    demandIntegrationPeriod:\n      id: 1538\n      type: uint8\n    numberOfDemandSubintervals:\n      id: 1539\n      type: uint8\n    demandLimitArmDuration:\n      id: 1540\n      type: uint16\n    genericAlarmMask:\n      id: 2048\n      type: bitmap16\n    electricityAlarmMask:\n      id: 2049\n      type: bitmap32\n    genFlowPressureAlarmMask:\n      id: 2050\n      type: bitmap16\n    waterSpecificAlarmMask:\n      id: 2051\n      type: bitmap16\n    heatCoolSpecificAlarmMASK:\n      id: 2052\n      type: bitmap16\n    gasSpecificAlarmMask:\n      id: 2053\n      type: bitmap16\n    extendedGenericAlarmMask:\n      id: 2054\n      type: bitmap48\n    manufactureAlarmMask:\n      id: 2055\n      type: bitmap16\n    billToDate:\n      id: 2560\n      type: uint32\n    billToDateTimeStamp:\n      id: 2561\n      type: utc\n    projectedBill:\n      id: 2562\n      type: uint32\n    projectedBillTimeStamp:\n      id: 2563\n      type: utc\n    notification_Control_Flags:\n      id: 0\n      type: bitmap32\n    notification_Flags:\n      id: 1\n      type: bitmap32\n    price_Notification_Flags:\n      id: 2\n      type: bitmap32\n    calendar_Notification_Flags:\n      id: 3\n      type: bitmap32\n    pre_Pay_Notification_Flags:\n      id: 4\n      type: bitmap32\n    device_Management_Flags:\n      id: 5\n      type: bitmap32\n    changeReportingProfile:\n      id: 256\n      type: unknown\n  cmd:\n    getProfile: 0\n    reqMirror: 1\n    mirrorRem: 2\n    reqFastPollMode: 3\n    getSnapshot: 4\n    takeSnapshot: 5\n    mirrorReportAttrRsp: 6\n  cmdRsp:\n    getProfileRsp: 0\n    reqMirrorRsp: 1\n    mirrorRemRsp: 2\n    reqFastPollModeRsp: 3\n    getSnapshotRsp: 4\ntelecommunicationsInformation:\n  attrId:\n    nodeDescription:\n      id: 0\n      type: charStr\n    deliveryEnable:\n      id: 1\n      type: boolean\n    pushInformationTimer:\n      id: 2\n      type: uint32\n    enableSecureConfiguration:\n      id: 3\n      type: boolean\n    numberOfContents:\n      id: 16\n      type: uint16\n    contentRootID:\n      id: 17\n      type: uint16\n  cmd:\n    reqInformation: 0\n    pushInformationRsp: 1\n    sendPreference: 2\n    reqPreferenceRsp: 3\n    update: 4\n    delete: 5\n    cfgNodeDescription: 6\n    cfgDeliveryEnable: 7\n    cfgPushInformationTimer: 8\n    cfgSetRootID: 9\n  cmdRsp:\n    reqInformationRsp: 0\n    pushInformation: 1\n    sendPreferenceRsp: 2\n    serverReqPreference: 3\n    reqPreferenceConfirmation: 4\n    updateRsp: 5\n    deleteRsp: 6\ntelecommunicationsVoiceOverZigbee:\n  attrId:\n    codecType:\n      id: 0\n      type: enum8\n    samplingFrequency:\n      id: 1\n      type: enum8\n    codecrate:\n      id: 2\n      type: enum8\n    establishmentTimeout:\n      id: 3\n      type: uint8\n    codecTypeSub1:\n      id: 4\n      type: enum8\n    codecTypeSub2:\n      id: 5\n      type: enum8\n    codecTypeSub3:\n      id: 6\n      type: enum8\n    compressionType:\n      id: 7\n      type: enum8\n    compressionRate:\n      id: 8\n      type: enum8\n    optionFlags:\n      id: 9\n      type: bitmap8\n    threshold:\n      id: 10\n      type: uint8\n  cmd:\n    establishmentReq: 0\n    voiceTransmission: 1\n    voiceTransmissionCompletion: 2\n    controlResponse: 3\n  cmdRsp:\n    establishmentResponse: 0\n    voiceTransmissionResponse: 1\n    control: 2\ntelecommunicationsChatting:\n  attrId:\n    uID:\n      id: 0\n      type: uint16\n    nickname:\n      id: 1\n      type: charStr\n    cID:\n      id: 16\n      type: uint16\n    name:\n      id: 17\n      type: charStr\n    enableAddChat:\n      id: 18\n      type: boolean\n  cmd:\n    joinChatReq: 0\n    leaveChatReq: 1\n    searchChatReq: 2\n    switchChairmanRsp: 3\n    startChatReq: 4\n    chatMessage: 5\n    getNodeInformationReq: 6\n  cmdRsp:\n    startChatRsp: 0\n    joinChatRsp: 1\n    userLeft: 2\n    userJoined: 3\n    searchChatRsp: 4\n    switchChairmanReq: 5\n    switchChairmanConfirm: 6\n    switchChairmanNotification: 7\n    getNodeInformationRsp: 8\nhaApplianceIdentification:\n  attrId:\n    basicIdentification:\n      id: 0\n      type: uint56\n    companyName:\n      id: 16\n      type: charStr\n    companyId:\n      id: 17\n      type: uint16\n    brandName:\n      id: 18\n      type: charStr\n    brandId:\n      id: 19\n      type: uint16\n    model:\n      id: 20\n      type: octetStr\n    partNumber:\n      id: 21\n      type: octetStr\n    productRevision:\n      id: 22\n      type: octetStr\n    softwareRevision:\n      id: 23\n      type: octetStr\n    productTypeName:\n      id: 24\n      type: octetStr\n    productTypeId:\n      id: 25\n      type: uint16\n    cecedSpecificationVersion:\n      id: 26\n      type: uint8\n  cmd: null\n  cmdRsp: null\nhaMeterIdentification:\n  attrId:\n    companyName:\n      id: 0\n      type: charStr\n    meterTypeId:\n      id: 1\n      type: uint16\n    dataQualityId:\n      id: 4\n      type: uint16\n    customerName:\n      id: 5\n      type: charStr\n    model:\n      id: 6\n      type: charStr\n    partNumber:\n      id: 7\n      type: charStr\n    productRevision:\n      id: 8\n      type: charStr\n    softwareRevision:\n      id: 10\n      type: charStr\n    utilityName:\n      id: 11\n      type: charStr\n    pod:\n      id: 12\n      type: charStr\n    availablePower:\n      id: 13\n      type: int24\n    powerThreshold:\n      id: 14\n      type: int24\n  cmd: null\n  cmdRsp: null\nhaApplianceEventsAlerts:\n  attrId: null\n  cmd:\n    getAlerts: 0\n  cmdRsp:\n    getAlertsRsp: 0\n    alertsNotification: 1\n    eventNotification: 2\nhaApplianceStatistics:\n  attrId:\n    logMaxSize:\n      id: 0\n      type: uint32\n    logQueueMaxSize:\n      id: 1\n      type: uint8\n  cmd:\n    log: 0\n    logQueue: 1\n  cmdRsp:\n    logNotification: 0\n    logRsp: 1\n    logQueueRsp: 2\n    statisticsAvailable: 3\nhaElectricalMeasurement:\n  attrId:\n    measurementType:\n      id: 0\n      type: bitmap32\n    dcVoltage:\n      id: 256\n      type: int16\n    dcVoltageMin:\n      id: 257\n      type: int16\n    dcvoltagemax:\n      id: 258\n      type: int16\n    dcCurrent:\n      id: 259\n      type: int16\n    dcCurrentMin:\n      id: 260\n      type: int16\n    dcCurrentMax:\n      id: 261\n      type: int16\n    dcPower:\n      id: 262\n      type: int16\n    dcPowerMin:\n      id: 263\n      type: int16\n    dcPowerMax:\n      id: 264\n      type: int16\n    dcVoltageMultiplier:\n      id: 512\n      type: uint16\n    dcVoltageDivisor:\n      id: 513\n      type: uint16\n    dcCurrentMultiplier:\n      id: 514\n      type: uint16\n    dcCurrentDivisor:\n      id: 515\n      type: uint16\n    dcPowerMultiplier:\n      id: 516\n      type: uint16\n    dcPowerDivisor:\n      id: 517\n      type: uint16\n    acFrequency:\n      id: 768\n      type: uint16\n    acFrequencyMin:\n      id: 769\n      type: uint16\n    acFrequencyMax:\n      id: 770\n      type: uint16\n    neutralCurrent:\n      id: 771\n      type: uint16\n    totalActivePower:\n      id: 772\n      type: int32\n    totalReactivePower:\n      id: 773\n      type: int32\n    totalApparentPower:\n      id: 774\n      type: uint32\n    meas1stHarmonicCurrent:\n      id: 775\n      type: int16\n    meas3rdHarmonicCurrent:\n      id: 776\n      type: int16\n    meas5thHarmonicCurrent:\n      id: 777\n      type: int16\n    meas7thHarmonicCurrent:\n      id: 778\n      type: int16\n    meas9thHarmonicCurrent:\n      id: 779\n      type: int16\n    meas11thHarmonicCurrent:\n      id: 780\n      type: int16\n    measPhase1stHarmonicCurrent:\n      id: 781\n      type: int16\n    measPhase3rdHarmonicCurrent:\n      id: 782\n      type: int16\n    measPhase5thHarmonicCurrent:\n      id: 783\n      type: int16\n    measPhase7thHarmonicCurrent:\n      id: 784\n      type: int16\n    measPhase9thHarmonicCurrent:\n      id: 785\n      type: int16\n    measPhase11thHarmonicCurrent:\n      id: 786\n      type: int16\n    acFrequencyMultiplier:\n      id: 1024\n      type: uint16\n    acFrequencyDivisor:\n      id: 1025\n      type: uint16\n    powerMultiplier:\n      id: 1026\n      type: uint32\n    powerDivisor:\n      id: 1027\n      type: uint32\n    harmonicCurrentMultiplier:\n      id: 1028\n      type: int8\n    phaseHarmonicCurrentMultiplier:\n      id: 1029\n      type: int8\n    instantaneousVoltage:\n      id: 1280\n      type: int16\n    instantaneousLineCurrent:\n      id: 1281\n      type: uint16\n    instantaneousActiveCurrent:\n      id: 1282\n      type: int16\n    instantaneousReactiveCurrent:\n      id: 1283\n      type: int16\n    instantaneousPower:\n      id: 1284\n      type: int16\n    rmsVoltage:\n      id: 1285\n      type: uint16\n    rmsVoltageMin:\n      id: 1286\n      type: uint16\n    rmsVoltageMax:\n      id: 1287\n      type: uint16\n    rmsCurrent:\n      id: 1288\n      type: uint16\n    rmsCurrentMin:\n      id: 1289\n      type: uint16\n    rmsCurrentMax:\n      id: 1290\n      type: uint16\n    activePower:\n      id: 1291\n      type: int16\n    activePowerMin:\n      id: 1292\n      type: int16\n    activePowerMax:\n      id: 1293\n      type: int16\n    reactivePower:\n      id: 1294\n      type: int16\n    apparentPower:\n      id: 1295\n      type: uint16\n    powerFactor:\n      id: 1296\n      type: int8\n    averageRmsVoltageMeasPeriod:\n      id: 1297\n      type: uint16\n    averageRmsOverVoltageCounter:\n      id: 1298\n      type: uint16\n    averageRmsUnderVoltageCounter:\n      id: 1299\n      type: uint16\n    rmsExtremeOverVoltagePeriod:\n      id: 1300\n      type: uint16\n    rmsExtremeUnderVoltagePeriod:\n      id: 1301\n      type: uint16\n    rmsVoltageSagPeriod:\n      id: 1302\n      type: uint16\n    rmsVoltageSwellPeriod:\n      id: 1303\n      type: uint16\n    acVoltageMultiplier:\n      id: 1536\n      type: uint16\n    acVoltageDivisor:\n      id: 1537\n      type: uint16\n    acCurrentMultiplier:\n      id: 1538\n      type: uint16\n    acCurrentDivisor:\n      id: 1539\n      type: uint16\n    acPowerMultiplier:\n      id: 1540\n      type: uint16\n    acPowerDivisor:\n      id: 1541\n      type: uint16\n    dcOverloadAlarmsMask:\n      id: 1792\n      type: bitmap8\n    dcVoltageOverload:\n      id: 1793\n      type: int16\n    dcCurrentOverload:\n      id: 1794\n      type: int16\n    acAlarmsMask:\n      id: 2048\n      type: bitmap16\n    acVoltageOverload:\n      id: 2049\n      type: int16\n    acCurrentOverload:\n      id: 2050\n      type: int16\n    acActivePowerOverload:\n      id: 2051\n      type: int16\n    acReactivePowerOverload:\n      id: 2052\n      type: int16\n    averageRmsOverVoltage:\n      id: 2053\n      type: int16\n    averageRmsUnderVoltage:\n      id: 2054\n      type: int16\n    rmsExtremeOverVoltage:\n      id: 2055\n      type: int16\n    rmsExtremeUnderVoltage:\n      id: 2056\n      type: int16\n    rmsVoltageSag:\n      id: 2057\n      type: int16\n    rmsVoltageSwell:\n      id: 2058\n      type: int16\n    lineCurrentPhB:\n      id: 2305\n      type: uint16\n    activeCurrentPhB:\n      id: 2306\n      type: int16\n    reactiveCurrentPhB:\n      id: 2307\n      type: int16\n    rmsVoltagePhB:\n      id: 2309\n      type: uint16\n    rmsVoltageMinPhB:\n      id: 2310\n      type: uint16\n    rmsVoltageMaxPhB:\n      id: 2311\n      type: uint16\n    rmsCurrentPhB:\n      id: 2312\n      type: uint16\n    rmsCurrentMinPhB:\n      id: 2313\n      type: uint16\n    rmsCurrentMaxPhB:\n      id: 2314\n      type: uint16\n    activePowerPhB:\n      id: 2315\n      type: int16\n    activePowerMinPhB:\n      id: 2316\n      type: int16\n    activePowerMaxPhB:\n      id: 2317\n      type: int16\n    reactivePowerPhB:\n      id: 2318\n      type: int16\n    apparentPowerPhB:\n      id: 2319\n      type: uint16\n    powerFactorPhB:\n      id: 2320\n      type: int8\n    averageRmsVoltageMeasurePeriodPhB:\n      id: 2321\n      type: uint16\n    averageRmsOverVoltageCounterPhB:\n      id: 2322\n      type: uint16\n    averageUnderVoltageCounterPhB:\n      id: 2323\n      type: uint16\n    rmsExtremeOverVoltagePeriodPhB:\n      id: 2324\n      type: uint16\n    rmsExtremeUnderVoltagePeriodPhB:\n      id: 2325\n      type: uint16\n    rmsVoltageSagPeriodPhB:\n      id: 2326\n      type: uint16\n    rmsVoltageSwellPeriodPhB:\n      id: 2327\n      type: uint16\n    lineCurrentPhC:\n      id: 2561\n      type: uint16\n    activeCurrentPhC:\n      id: 2562\n      type: int16\n    reactiveCurrentPhC:\n      id: 2563\n      type: int16\n    rmsVoltagePhC:\n      id: 2565\n      type: uint16\n    rmsVoltageMinPhC:\n      id: 2566\n      type: uint16\n    rmsVoltageMaxPhC:\n      id: 2567\n      type: uint16\n    rmsCurrentPhC:\n      id: 2568\n      type: uint16\n    rmsCurrentMinPhC:\n      id: 2569\n      type: uint16\n    rmsCurrentMaxPhC:\n      id: 2570\n      type: uint16\n    activePowerPhC:\n      id: 2571\n      type: int16\n    activePowerMinPhC:\n      id: 2572\n      type: int16\n    activePowerMaxPhC:\n      id: 2573\n      type: int16\n    reactivePowerPhC:\n      id: 2574\n      type: int16\n    apparentPowerPhC:\n      id: 2575\n      type: uint16\n    powerFactorPhC:\n      id: 2576\n      type: int8\n    averageRmsVoltageMeasPeriodPhC:\n      id: 2577\n      type: uint16\n    averageRmsOverVoltageCounterPhC:\n      id: 2578\n      type: uint16\n    averageUnderVoltageCounterPhC:\n      id: 2579\n      type: uint16\n    rmsExtremeOverVoltagePeriodPhC:\n      id: 2580\n      type: uint16\n    rmsExtremeUnderVoltagePeriodPhC:\n      id: 2581\n      type: uint16\n    rmsVoltageSagPeriodPhC:\n      id: 2582\n      type: uint16\n    rmsVoltageSwellPeriodPh_C:\n      id: 2583\n      type: uint16\n  cmd:\n    getProfileInfo: 0\n    getMeasurementProfile: 1\n  cmdRsp:\n    getProfileInfoRsp: 0\n    getMeasurementProfileRsp: 1\nhaDiagnostic:\n  attrId:\n    numberOfResets:\n      id: 0\n      type: uint16\n    persistentMemoryWrites:\n      id: 1\n      type: uint16\n    macRxBcast:\n      id: 256\n      type: uint32\n    macTxBcast:\n      id: 257\n      type: uint32\n    macRxUcast:\n      id: 258\n      type: uint32\n    macTxUcast:\n      id: 259\n      type: uint32\n    macTxUcastRetry:\n      id: 260\n      type: uint16\n    macTxUcastFail:\n      id: 261\n      type: uint16\n    aPSRxBcast:\n      id: 262\n      type: uint16\n    aPSTxBcast:\n      id: 263\n      type: uint16\n    aPSRxUcast:\n      id: 264\n      type: uint16\n    aPSTxUcastSuccess:\n      id: 265\n      type: uint16\n    aPSTxUcastRetry:\n      id: 266\n      type: uint16\n    aPSTxUcastFail:\n      id: 267\n      type: uint16\n    routeDiscInitiated:\n      id: 268\n      type: uint16\n    neighborAdded:\n      id: 269\n      type: uint16\n    neighborRemoved:\n      id: 270\n      type: uint16\n    neighborStale:\n      id: 271\n      type: uint16\n    joinIndication:\n      id: 272\n      type: uint16\n    childMoved:\n      id: 273\n      type: uint16\n    nwkFcFailure:\n      id: 274\n      type: uint16\n    apsFcFailure:\n      id: 275\n      type: uint16\n    apsUnauthorizedKey:\n      id: 276\n      type: uint16\n    nwkDecryptFailures:\n      id: 277\n      type: uint16\n    apsDecryptFailures:\n      id: 278\n      type: uint16\n    packetBufferAllocateFailures:\n      id: 279\n      type: uint16\n    relayedUcast:\n      id: 280\n      type: uint16\n    phyToMacQueueLimitReached:\n      id: 281\n      type: uint16\n    packetValidateDropCount:\n      id: 282\n      type: uint16\n    averageMacRetryPerApsMessageSent:\n      id: 283\n      type: uint16\n    lastMessageLqi:\n      id: 284\n      type: uint8\n    lastMessageRssi:\n      id: 285\n      type: int8\n  cmd: null\n  cmdRsp: null\nlightLink:\n  attrId: null\n  cmd:\n    scanReq: 0\n    deviceInformationReq: 2\n    identifyReq: 6\n    resetToFactoryNewReq: 7\n    networkStartReq: 16\n    networkJoinRouterReq: 18\n    networkJoinEndDeviceReq: 20\n    networkUpdateReq: 22\n    getGroupIdentifiersReq: 65\n    getEndpointListReq: 66\n  cmdRsp:\n    scanRsp: 1\n    deviceInformationRsp: 3\n    networkStartRsp: 17\n    networkJoinRouterRsp: 19\n    networkJoinEndDeviceRsp: 21\n    endpointInformation: 64\n    getGroupIdentifiersRsp: 65\n    getEndpointListRsp: 66\n"
       }
     }
   }
