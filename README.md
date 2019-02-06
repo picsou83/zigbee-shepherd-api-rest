@@ -50,9 +50,9 @@ http://192.168.1.56:3000/configuration?appareil=0x000d6ffffe7cc1e8
 * Open up http://youripofservernodejs:3000/api-docs with your browser
 
 use swagger
-https://user-images.githubusercontent.com/34648108/52335939-ef536800-2a03-11e9-8e44-1313d8a926e1.png
+![alt tag](https://user-images.githubusercontent.com/34648108/52335939-ef536800-2a03-11e9-8e44-1313d8a926e1.png)
 
-https://user-images.githubusercontent.com/34648108/52336042-26c21480-2a04-11e9-89de-03c6ae326676.png
+![alt tag](https://user-images.githubusercontent.com/34648108/52336042-26c21480-2a04-11e9-89de-03c6ae326676.png)
 
 
 * Use API directly with your browser http://youripofservernodejs:3000/
