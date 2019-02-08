@@ -41,11 +41,19 @@ var zserver = new ZShepherd('/dev/ttyACM0', {
 
 * pairing device
 
+Pairing device is automatic when devIncoming (use model of zigbee-shepherd-converters)
+
+see the link below for pairing device (how reset end device)
+
 https://koenkk.github.io/zigbee2mqtt/getting_started/pairing_devices.html
 
-use configuration to bind end report device (use zigbee-shepherd-converters)
+It's also possible to use GET configuration command to bind end report device 
 
 http://192.168.1.56:3000/configuration?appareil=0x000d6ffffe7cc1e8
+
+* Sometimes short adresse of end device change (error status 205 no network route)
+
+this is automatically fixed with the command zdo/nwkAddrReq (it's integrate with zigbee-shepherd of my depot)
 
 * Open up http://youripofservernodejs:3000/api-docs with your browser
 
