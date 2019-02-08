@@ -111,7 +111,7 @@ zserver.controller.on('SAPI:findDeviceConfirm', function (data) {
 		} else {
 	console.log('update du status 205 en Online pour ' + data.result);
 	dev.update({ nwkAddr: data.searchkey, status: 'online' });
-	zserver._devbox.maintain(function (err){ });
+	zserver._devbox.sync(dev._getId(), function () {});
 }
 });
 
