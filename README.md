@@ -54,6 +54,8 @@ use swagger
 
 ![alt tag](https://user-images.githubusercontent.com/34648108/52336042-26c21480-2a04-11e9-89de-03c6ae326676.png)
 
+![alt tag](https://user-images.githubusercontent.com/34648108/52508721-d7dbd100-2bf5-11e9-860d-1a2f14721486.png)
+
 
 * Use API directly with your browser http://youripofservernodejs:3000/
 
