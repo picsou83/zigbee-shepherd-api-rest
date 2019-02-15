@@ -107,6 +107,9 @@ The necessary equipment for the firmware and the device preparation process are 
 The devices connected to the Zigbee-network and inform the coordinator of their status and events (button presses, motion detection, temperature change). This information is reflected in console.log and export to jeedom plugin but it's possible to export object-states elsewhere.
 
 ## the reports are logger and sent to the jeedom plugin
+
+![alt tag](https://user-images.githubusercontent.com/34648108/52850739-7c897180-3114-11e9-87f7-52ab5d3cfa96.png)
+
 'devChange' and 'attReport' are sent to jeedom plugin
 example of Get request :
 ```
